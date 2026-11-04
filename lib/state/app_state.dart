@@ -39,7 +39,13 @@ class AppState extends ChangeNotifier {
   // ------------------------------------------------------------------
   bool isLoggedIn = false;
   bool isAdmin = false;
-  AppUser user = AppUser(nome: 'Viviane Souza', email: 'viviane@email.com', telefone: '(11) 99999-0000');
+  AppUser user = AppUser(
+    nome: 'Viviane Souza',
+    email: 'viviane@email.com',
+    telefone: '(11) 99999-0000',
+  );
+
+  String _senhaDemonstracao = '1234';
 
   void login({bool admin = false}) {
     isLoggedIn = true;
@@ -101,8 +107,7 @@ class AppState extends ChangeNotifier {
   double get cartSubtotal =>
       cartItems.fold(0, (sum, item) => sum + item.subtotal);
 
-  int get cartCount =>
-      cartItems.fold(0, (sum, item) => sum + item.quantidade);
+  int get cartCount => cartItems.fold(0, (sum, item) => sum + item.quantidade);
 
   void addToCart(Product product, {int quantidade = 1}) {
     final existing = cartItems.where((c) => c.produto.id == product.id);
@@ -170,7 +175,10 @@ class AppState extends ChangeNotifier {
 
   Address? get enderecoPrincipal {
     if (addresses.isEmpty) return null;
-    return addresses.firstWhere((a) => a.principal, orElse: () => addresses.first);
+    return addresses.firstWhere(
+      (a) => a.principal,
+      orElse: () => addresses.first,
+    );
   }
 
   void addAddress(Address address) {
@@ -266,11 +274,19 @@ class AppState extends ChangeNotifier {
   }
 
   List<Order> get ongoingOrders => orders
-      .where((o) => o.status != StatusPedido.entregue && o.status != StatusPedido.retirado)
+      .where(
+        (o) =>
+            o.status != StatusPedido.entregue &&
+            o.status != StatusPedido.retirado,
+      )
       .toList();
 
   List<Order> get historyOrders => orders
-      .where((o) => o.status == StatusPedido.entregue || o.status == StatusPedido.retirado)
+      .where(
+        (o) =>
+            o.status == StatusPedido.entregue ||
+            o.status == StatusPedido.retirado,
+      )
       .toList();
 
   // ------------------------------------------------------------------
@@ -325,11 +341,25 @@ class AppState extends ChangeNotifier {
   // ------------------------------------------------------------------
   // Perfil / restrições do usuário
   // ------------------------------------------------------------------
-  void updateProfile({required String nome, required String email, required String telefone}) {
+  void updateProfile({
+    required String nome,
+    required String email,
+    required String telefone,
+  }) {
     user.nome = nome;
     user.email = email;
     user.telefone = telefone;
     notifyListeners();
+  }
+
+  bool atualizarSenhaDemonstracao(String novaSenha) {
+    if (novaSenha.length < 4) {
+      return false;
+    }
+
+    _senhaDemonstracao = novaSenha;
+    notifyListeners();
+    return true;
   }
 
   void updateUserRestrictions(Set<DietaryRestriction> restrictions) {
