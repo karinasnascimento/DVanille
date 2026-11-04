@@ -3,6 +3,8 @@ import '../../state/app_state.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/dvanille_brand.dart';
 
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
   @override
@@ -110,8 +112,14 @@ class CadastroScreen extends StatefulWidget {
 class _CadastroScreenState extends State<CadastroScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nomeCtrl = TextEditingController();
+  final _telefoneCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _senhaCtrl = TextEditingController();
+
+  final _telefoneMask = MaskTextInputFormatter(
+    mask: '(##) #####-####',
+    filter: {'#': RegExp(r'[0-9]')},
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -129,21 +137,31 @@ class _CadastroScreenState extends State<CadastroScreen> {
                 const SizedBox(height: 24),
                 TextFormField(
                   controller: _nomeCtrl,
-                  decoration: const InputDecoration(hintText: 'Nome completo', prefixIcon: Icon(Icons.person_outline)),
+                  decoration: const InputDecoration(hintText: 'Nome completo', prefixIcon: Icon(Icons.person_rounded)),
                   validator: (v) => (v == null || v.isEmpty) ? 'Informe seu nome' : null,
+                ),
+                const SizedBox(height: 14),
+                TextFormField(controller: _telefoneCtrl, keyboardType: TextInputType.phone, inputFormatters: [_telefoneMask],
+                decoration: const InputDecoration(hintText: 'Telefone', prefixIcon: Icon(Icons.phone_rounded),),
+                validator: (v) {
+                  if (v == null || v.isEmpty) {
+                    return 'Informe seu número';}
+                    if (_telefoneMask.getUnmaskedText().length != 11) {
+                      return 'Informe um telefone válido';}
+                      return null;},
                 ),
                 const SizedBox(height: 14),
                 TextFormField(
                   controller: _emailCtrl,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(hintText: 'E-mail', prefixIcon: Icon(Icons.mail_outline)),
+                  decoration: const InputDecoration(hintText: 'E-mail', prefixIcon: Icon(Icons.mail_rounded)),
                   validator: (v) => (v == null || !v.contains('@')) ? 'E-mail inválido' : null,
                 ),
                 const SizedBox(height: 14),
                 TextFormField(
                   controller: _senhaCtrl,
                   obscureText: true,
-                  decoration: const InputDecoration(hintText: 'Senha', prefixIcon: Icon(Icons.lock_outline)),
+                  decoration: const InputDecoration(hintText: 'Senha', prefixIcon: Icon(Icons.lock_rounded)),
                   validator: (v) => (v == null || v.length < 4) ? 'Mínimo de 4 caracteres' : null,
                 ),
                 const SizedBox(height: 22),
@@ -151,10 +169,10 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       AppState.instance.updateProfile(
-                        nome: _nomeCtrl.text,
-                        email: _emailCtrl.text,
-                        telefone: AppState.instance.user.telefone,
-                      );
+                        nome: _nomeCtrl.text.trim(),
+                        email: _emailCtrl.text.trim(),
+                        telefone: _telefoneMask.getUnmaskedText(),
+                        );
                       AppState.instance.login();
                       Navigator.pushNamedAndRemoveUntil(context, '/main', (r) => false);
                     }

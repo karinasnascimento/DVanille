@@ -3,6 +3,8 @@ import '../../state/app_state.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/dvanille_brand.dart';
 
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -64,6 +66,7 @@ class ProfileScreen extends StatelessWidget {
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
+
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
@@ -74,55 +77,139 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   late final TextEditingController _emailCtrl;
   late final TextEditingController _telCtrl;
 
+  final _telefoneMask = MaskTextInputFormatter(
+    mask: '(##) #####-####',
+    filter: {'#': RegExp(r'[0-9]')},
+  );
+
   @override
   void initState() {
     super.initState();
     final u = AppState.instance.user;
+
     _nomeCtrl = TextEditingController(text: u.nome);
     _emailCtrl = TextEditingController(text: u.email);
-    _telCtrl = TextEditingController(text: u.telefone);
+
+    // Formata o telefone que já está salvo no perfil.
+    final telefoneNumeros = u.telefone.replaceAll(
+      RegExp(r'\D'),
+      '',
+    );
+
+    _telCtrl = TextEditingController(
+      text: _telefoneMask.maskText(telefoneNumeros),
+    );
+  }
+
+  @override
+  void dispose() {
+    _nomeCtrl.dispose();
+    _emailCtrl.dispose();
+    _telCtrl.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const DVanilleHeader(title: 'Editar perfil', showBack: true),
-      body: Padding(
+      appBar: const DVanilleHeader(
+        title: 'Editar perfil',
+        showBack: true,
+      ),
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Nome', style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.brownStrong)),
+              const Text(
+                'Nome',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.brownStrong,
+                ),
+              ),
               const SizedBox(height: 6),
-              TextFormField(controller: _nomeCtrl, validator: (v) => (v == null || v.isEmpty) ? 'Informe seu nome' : null),
+              TextFormField(
+                controller: _nomeCtrl,
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty)
+                        ? 'Informe seu nome'
+                        : null,
+              ),
+
               const SizedBox(height: 16),
-              const Text('E-mail', style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.brownStrong)),
+
+              const Text(
+                'E-mail',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.brownStrong,
+                ),
+              ),
               const SizedBox(height: 6),
               TextFormField(
                 controller: _emailCtrl,
                 keyboardType: TextInputType.emailAddress,
-                validator: (v) => (v == null || !v.contains('@')) ? 'E-mail inválido' : null,
+                validator: (v) =>
+                    (v == null || !v.contains('@'))
+                        ? 'E-mail inválido'
+                        : null,
               ),
+
               const SizedBox(height: 16),
-              const Text('Telefone', style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.brownStrong)),
+
+              const Text(
+                'Telefone',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.brownStrong,
+                ),
+              ),
               const SizedBox(height: 6),
               TextFormField(
                 controller: _telCtrl,
                 keyboardType: TextInputType.phone,
-                decoration: const InputDecoration(hintText: '(XX) XXXXX-XXXX'),
+                inputFormatters: [_telefoneMask],
+                decoration: const InputDecoration(
+                  hintText: '(11) 99999-9999',
+                ),
+                validator: (v) {
+                  final numeros =
+                      (v ?? '').replaceAll(RegExp(r'\D'), '');
+
+                  if (numeros.isEmpty) {
+                    return 'Informe seu telefone';
+                  }
+
+                  if (numeros.length != 11) {
+                    return 'Informe um telefone válido';
+                  }
+
+                  return null;
+                },
               ),
+
               const SizedBox(height: 26),
+
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     AppState.instance.updateProfile(
-                      nome: _nomeCtrl.text,
-                      email: _emailCtrl.text,
-                      telefone: _telCtrl.text,
+                      nome: _nomeCtrl.text.trim(),
+                      email: _emailCtrl.text.trim(),
+                      telefone: _telCtrl.text.replaceAll(
+                        RegExp(r'\D'),
+                        '',
+                      ),
                     );
-                    showBrandSnackBar(context, 'Perfil atualizado com sucesso!');
+
+                    showBrandSnackBar(
+                      context,
+                      'Perfil atualizado com sucesso!',
+                    );
+
                     Navigator.pop(context);
                   }
                 },
