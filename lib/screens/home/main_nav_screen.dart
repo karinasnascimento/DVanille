@@ -34,13 +34,21 @@ class _MainNavScreenState extends State<MainNavScreen> {
       bottomNavigationBar: ListenableBuilder(
         listenable: state,
         builder: (context, _) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
           return NavigationBarTheme(
             data: NavigationBarThemeData(
-              backgroundColor: AppColors.white,
-              indicatorColor: AppColors.pink.withValues(alpha: 0.5),
-              labelTextStyle: WidgetStateProperty.all(
-                const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppColors.brownStrong),
-              ),
+              backgroundColor: isDark ? AppColors.darkSecondary : AppColors.white,
+              indicatorColor: isDark ? AppColors.darkBorder : AppColors.pink.withValues(alpha: 0.5),
+              iconTheme: WidgetStateProperty.resolveWith((states) => IconThemeData(
+                color: isDark
+                    ? (states.contains(WidgetState.selected) ? AppColors.darkHighlight : AppColors.darkTextSecondary)
+                    : AppColors.brown,
+              )),
+              labelTextStyle: WidgetStateProperty.resolveWith((states) => TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: isDark ? AppColors.darkText : AppColors.brownStrong,
+              )),
             ),
             child: NavigationBar(
               selectedIndex: _index,

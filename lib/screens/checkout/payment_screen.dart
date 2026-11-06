@@ -43,6 +43,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget build(BuildContext context) {
     final state = AppState.instance;
     final total = state.cartSubtotal + state.taxaEntregaAtual;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryText = isDark ? AppColors.darkText : AppColors.brownStrong;
 
     return Scaffold(
       appBar: const DVanilleHeader(title: 'Pagamento', showBack: true),
@@ -51,7 +53,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('MÉTODO DE PAGAMENTO', style: TextStyle(fontWeight: FontWeight.w700, color: AppColors.brownStrong, fontSize: 13)),
+            Text('MÉTODO DE PAGAMENTO', style: TextStyle(fontWeight: FontWeight.w700, color: primaryText, fontSize: 13)),
             const SizedBox(height: 14),
             GridView.count(
               shrinkWrap: true,
@@ -74,7 +76,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             if (metodo == MetodoPagamento.pix) _pixSection(total),
             if (metodo == MetodoPagamento.carteira) _walletSection(),
             const Divider(height: 32),
-            const Text('DETALHES', style: TextStyle(fontWeight: FontWeight.w700, color: AppColors.brownStrong, fontSize: 13)),
+            Text('DETALHES', style: TextStyle(fontWeight: FontWeight.w700, color: primaryText, fontSize: 13)),
             const SizedBox(height: 10),
             _totalRow('Subtotal', state.cartSubtotal),
             _totalRow('Entrega', state.taxaEntregaAtual),
@@ -112,20 +114,24 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Widget _method(MetodoPagamento m, IconData icon, String label) {
     final selected = metodo == m;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final selectedColor = isDark ? AppColors.darkButton : AppColors.brown;
+    final unselectedColor = isDark ? AppColors.darkSurface : AppColors.white;
+    final textColor = isDark ? AppColors.darkText : AppColors.brownStrong;
     return GestureDetector(
       onTap: () => setState(() => metodo = m),
       child: Container(
         decoration: BoxDecoration(
-          color: selected ? AppColors.brown : AppColors.white,
+          color: selected ? selectedColor : unselectedColor,
           borderRadius: BorderRadius.circular(AppRadius.md),
-          border: Border.all(color: selected ? AppColors.brown : AppColors.beige),
+          border: Border.all(color: selected ? selectedColor : (isDark ? AppColors.darkBorder : AppColors.beige)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: selected ? Colors.white : AppColors.brownStrong),
+            Icon(icon, color: selected ? (isDark ? AppColors.darkBackground : Colors.white) : textColor),
             const SizedBox(height: 6),
-            Text(label, style: TextStyle(color: selected ? Colors.white : AppColors.brownStrong, fontWeight: FontWeight.w700, fontSize: 12)),
+            Text(label, style: TextStyle(color: selected ? (isDark ? AppColors.darkBackground : Colors.white) : textColor, fontWeight: FontWeight.w700, fontSize: 12)),
           ],
         ),
       ),
@@ -133,11 +139,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _cashSection() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryText = isDark ? AppColors.darkText : AppColors.brownStrong;
     return DVanilleCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Precisa de troco?', style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.brownStrong)),
+          Text('Precisa de troco?', style: TextStyle(fontWeight: FontWeight.w600, color: primaryText)),
           const SizedBox(height: 10),
           Row(
             children: [
@@ -164,21 +172,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _pill(String label, bool selected, VoidCallback onTap) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final selectedColor = isDark ? AppColors.darkButton : AppColors.brown;
+    final unselectedColor = isDark ? AppColors.darkSecondary : AppColors.cream;
+    final textColor = isDark ? AppColors.darkText : AppColors.brownStrong;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         decoration: BoxDecoration(
-          color: selected ? AppColors.brown : AppColors.cream,
+          color: selected ? selectedColor : unselectedColor,
           borderRadius: BorderRadius.circular(AppRadius.pill),
-          border: Border.all(color: selected ? AppColors.brown : AppColors.beige),
+          border: Border.all(color: selected ? selectedColor : (isDark ? AppColors.darkBorder : AppColors.beige)),
         ),
-        child: Text(label, style: TextStyle(color: selected ? Colors.white : AppColors.brownStrong, fontWeight: FontWeight.w700)),
+        child: Text(label, style: TextStyle(color: selected ? (isDark ? AppColors.darkBackground : Colors.white) : textColor, fontWeight: FontWeight.w700)),
       ),
     );
   }
 
   Widget _cardSection() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final secondaryText = isDark ? AppColors.darkTextSecondary : AppColors.textMuted;
     return DVanilleCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,21 +217,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ],
           ),
           const SizedBox(height: 6),
-          const Text('Protótipo — nenhum dado real é processado ou armazenado.',
-              style: TextStyle(fontSize: 11, color: AppColors.textMuted)),
+          Text('Protótipo — nenhum dado real é processado ou armazenado.',
+              style: TextStyle(fontSize: 11, color: secondaryText)),
         ],
       ),
     );
   }
 
   Widget _pixSection(double total) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryText = isDark ? AppColors.darkText : AppColors.brownStrong;
     return DVanilleCard(
       child: Column(
         children: [
-          const Icon(Icons.qr_code_2, size: 84, color: AppColors.brownStrong),
+          Icon(Icons.qr_code_2, size: 84, color: primaryText),
           const SizedBox(height: 10),
           Text('Valor: R\$ ${total.toStringAsFixed(2).replaceAll('.', ',')}',
-              style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.brownStrong)),
+              style: TextStyle(fontWeight: FontWeight.w700, color: primaryText)),
           const SizedBox(height: 6),
           Text(
             pixAguardando ? 'Aguardando pagamento' : 'Pagamento confirmado.',
@@ -234,14 +250,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _walletSection() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryText = isDark ? AppColors.darkText : AppColors.brownStrong;
     return DVanilleCard(
       child: Row(
-        children: const [
-          Icon(Icons.account_balance_wallet, color: AppColors.brownStrong),
-          SizedBox(width: 10),
+        children: [
+          Icon(Icons.account_balance_wallet, color: primaryText),
+          const SizedBox(width: 10),
           Expanded(
             child: Text('Carteira digital D\'Vanille selecionada. Protótipo — nenhuma transação real é realizada.',
-                style: TextStyle(fontSize: 13, color: AppColors.brownStrong)),
+                style: TextStyle(fontSize: 13, color: primaryText)),
           ),
         ],
       ),

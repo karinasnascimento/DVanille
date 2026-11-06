@@ -17,6 +17,10 @@ class OffersScreen extends StatelessWidget {
         listenable: state,
         builder: (context, _) {
           final ofertas = state.products.where((p) => p.emOferta).toList();
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          final primaryText = isDark ? AppColors.darkText : AppColors.brownStrong;
+          final secondaryText = isDark ? AppColors.darkTextSecondary : AppColors.textMuted;
+          final giftSurface = isDark ? AppColors.darkSurface : AppColors.beige.withValues(alpha: 0.4);
           return SingleChildScrollView(
             padding: const EdgeInsets.all(18),
             child: Column(
@@ -52,14 +56,18 @@ class OffersScreen extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
-                    color: AppColors.beige.withValues(alpha: 0.4),
+                    color: giftSurface,
                     borderRadius: BorderRadius.circular(AppRadius.lg),
+                    border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.beige),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Presenteie alguém com D\'Vanille',
-                          style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.brownStrong, fontSize: 15)),
+                      Text('Presenteie alguém com D\'Vanille',
+                          style: TextStyle(fontWeight: FontWeight.w600, color: primaryText, fontSize: 15)),
+                      const SizedBox(height: 5),
+                      Text('Um carinho especial para adoçar o dia de alguém.',
+                          style: TextStyle(fontSize: 13, color: secondaryText, height: 1.4)),
                       const SizedBox(height: 12),
                       ElevatedButton(
                         onPressed: () => Navigator.pushNamed(context, '/vale-presente'),
@@ -101,12 +109,18 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
     const valores = [30.0, 50.0, 100.0, 150.0];
     return Scaffold(
       appBar: const DVanilleHeader(title: 'Vale-presente', showBack: true),
-      body: Padding(
+      body: Builder(
+        builder: (context) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          final primaryText = isDark ? AppColors.darkText : AppColors.brownStrong;
+          final secondaryText = isDark ? AppColors.darkTextSecondary : AppColors.textMuted;
+          final optionSurface = isDark ? AppColors.darkSurface : AppColors.white;
+          return Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Escolha o valor', style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.brownStrong)),
+            Text('Escolha o valor', style: TextStyle(fontWeight: FontWeight.w600, color: primaryText)),
             const SizedBox(height: 14),
             Wrap(
               spacing: 12,
@@ -123,12 +137,12 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
                     height: 60,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: sel ? AppColors.brown : AppColors.white,
+                      color: sel ? (isDark ? AppColors.darkButton : AppColors.brown) : optionSurface,
                       borderRadius: BorderRadius.circular(AppRadius.md),
-                      border: Border.all(color: sel ? AppColors.brown : AppColors.beige),
+                      border: Border.all(color: sel ? (isDark ? AppColors.darkButton : AppColors.brown) : (isDark ? AppColors.darkBorder : AppColors.beige)),
                     ),
                     child: Text('R\$${v.toStringAsFixed(0)}',
-                        style: TextStyle(color: sel ? Colors.white : AppColors.brownStrong, fontWeight: FontWeight.w700)),
+                        style: TextStyle(color: sel ? (isDark ? AppColors.darkBackground : Colors.white) : primaryText, fontWeight: FontWeight.w700)),
                   ),
                 );
               }).toList(),
@@ -138,7 +152,15 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
               controller: _customCtrl,
               keyboardType: TextInputType.number,
               onChanged: (v) => setState(() => selected = double.tryParse(v)),
-              decoration: const InputDecoration(hintText: 'Valor personalizado (R\$)'),
+              style: TextStyle(color: primaryText),
+              decoration: InputDecoration(
+                hintText: 'Valor personalizado (R\$)',
+                hintStyle: TextStyle(color: secondaryText),
+                filled: true,
+                fillColor: optionSurface,
+                enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: isDark ? AppColors.darkBorder : AppColors.beige)),
+                focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: BorderSide(color: isDark ? AppColors.darkButton : AppColors.brown, width: 1.5)),
+              ),
             ),
             const Spacer(),
             ElevatedButton(
@@ -150,15 +172,17 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
                       showDialog(
                         context: context,
                         builder: (_) => AlertDialog(
-                          backgroundColor: AppColors.cream,
-                          title: const Text('Vale-presente gerado'),
+                          backgroundColor: isDark ? AppColors.darkSecondary : AppColors.cream,
+                          title: Text('Vale-presente gerado', style: TextStyle(color: primaryText)),
                           content: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Valor: R\$ ${card.valor.toStringAsFixed(2)}'),
-                              Text('Código: ${card.codigo}'),
-                              Text('Validade: ${card.validade.day}/${card.validade.month}/${card.validade.year}'),
+                              Text('Seu presente está pronto!', style: TextStyle(color: secondaryText)),
+                              const SizedBox(height: 10),
+                              Text('Valor: R\$ ${card.valor.toStringAsFixed(2)}', style: TextStyle(color: primaryText)),
+                              Text('Código: ${card.codigo}', style: TextStyle(color: primaryText)),
+                              Text('Validade: ${card.validade.day}/${card.validade.month}/${card.validade.year}', style: TextStyle(color: primaryText)),
                             ],
                           ),
                           actions: [
@@ -167,7 +191,7 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               },
-                              child: const Text('OK'),
+                              child: Text('OK', style: TextStyle(color: isDark ? AppColors.darkHighlight : AppColors.brownStrong)),
                             ),
                           ],
                         ),
@@ -177,6 +201,8 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
             ),
           ],
         ),
+      );
+        },
       ),
     );
   }
@@ -193,6 +219,9 @@ class MyGiftCardsScreen extends StatelessWidget {
       body: ListenableBuilder(
         listenable: state,
         builder: (context, _) {
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          final primaryText = isDark ? AppColors.darkText : AppColors.brownStrong;
+          final secondaryText = isDark ? AppColors.darkTextSecondary : AppColors.textMuted;
           if (state.giftCards.isEmpty) {
             return const EmptyState(icon: Icons.card_giftcard_outlined, message: 'Você ainda não possui vales-presente.');
           }
@@ -205,17 +234,17 @@ class MyGiftCardsScreen extends StatelessWidget {
               return DVanilleCard(
                 child: Row(
                   children: [
-                    const Icon(Icons.card_giftcard, color: AppColors.brown),
+                    Icon(Icons.card_giftcard, color: isDark ? AppColors.darkHighlight : AppColors.brown),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text('R\$ ${g.valor.toStringAsFixed(2)}',
-                              style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.brownStrong)),
-                          Text(g.codigo, style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+                              style: TextStyle(fontWeight: FontWeight.w700, color: primaryText)),
+                          Text(g.codigo, style: TextStyle(fontSize: 12, color: secondaryText)),
                           Text('Válido até ${g.validade.day}/${g.validade.month}/${g.validade.year}',
-                              style: const TextStyle(fontSize: 11, color: AppColors.textMuted)),
+                              style: TextStyle(fontSize: 11, color: secondaryText)),
                         ],
                       ),
                     ),

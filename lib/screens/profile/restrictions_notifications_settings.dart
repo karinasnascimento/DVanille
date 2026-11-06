@@ -115,8 +115,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               return ListTile(
                 contentPadding: EdgeInsets.zero,
                 leading: Text(n.emoji, style: const TextStyle(fontSize: 22)),
-                title: Text(n.titulo, style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.brownStrong)),
-                subtitle: Text(n.mensagem, style: const TextStyle(color: AppColors.textMuted)),
+                title: Text(n.titulo, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
+                subtitle: Text(n.mensagem, style: Theme.of(context).textTheme.bodySmall),
               );
             },
           );
@@ -136,6 +136,24 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(18),
         children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 4, 12, 10),
+            child: Text('ACESSIBILIDADE', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkHighlight
+                : AppColors.brownStrong, letterSpacing: 0.6)),
+          ),
+          ListenableBuilder(
+            listenable: AppState.instance,
+            builder: (context, _) => SwitchListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+              secondary: const Icon(Icons.dark_mode_outlined),
+              title: const Text('Modo escuro'),
+              subtitle: const Text('Ativar a aparência escura do aplicativo'),
+              value: AppState.instance.isDarkMode,
+              onChanged: AppState.instance.setDarkMode,
+            ),
+          ),
+          const Divider(height: 28),
           _tile(context, Icons.notifications_none, 'Notificações', () => Navigator.pushNamed(context, '/notificacoes')),
           _tile(context, Icons.restaurant_menu_outlined, 'Preferências alimentares', () => Navigator.pushNamed(context, '/restricoes')),
           _tile(context, Icons.location_on_outlined, 'Endereços', () => Navigator.pushNamed(context, '/enderecos')),
@@ -157,7 +175,7 @@ class SettingsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        backgroundColor: AppColors.cream,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(title),
         content: Text(content),
         actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('FECHAR'))],
@@ -166,11 +184,11 @@ class SettingsScreen extends StatelessWidget {
   }
 
   Widget _tile(BuildContext context, IconData icon, String label, VoidCallback onTap, {Color? color}) {
-    final c = color ?? AppColors.brownStrong;
+    final c = color ?? Theme.of(context).colorScheme.onSurface;
     return ListTile(
       leading: Icon(icon, color: c),
       title: Text(label, style: TextStyle(color: c, fontWeight: FontWeight.w500)),
-      trailing: const Icon(Icons.chevron_right, color: AppColors.textMuted),
+      trailing: Icon(Icons.chevron_right, color: Theme.of(context).colorScheme.onSurfaceVariant),
       onTap: onTap,
     );
   }

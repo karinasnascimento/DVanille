@@ -13,6 +13,16 @@ class AppColors {
   static const Color warning = Color(0xFFC98A4B);
   static const Color danger = Color(0xFFC98F8C);
   static const Color textMuted = Color(0xFFA6957E);
+
+  // Paleta oficial do modo escuro
+  static const Color darkBackground = Color(0xFF241F1B);
+  static const Color darkSecondary = Color(0xFF332B26);
+  static const Color darkSurface = Color(0xFF3A322C);
+  static const Color darkText = Color(0xFFFFF4E8);
+  static const Color darkTextSecondary = Color(0xFFD9C6AF);
+  static const Color darkHighlight = Color(0xFFE6A9A5);
+  static const Color darkButton = Color(0xFFB99F82);
+  static const Color darkBorder = Color(0xFF55483D);
 }
 
 class AppRadius {
@@ -145,4 +155,85 @@ class AppTheme {
       ),
     );
   }
+
+  static ThemeData get darkTheme {
+    final scheme = ColorScheme.fromSeed(
+      seedColor: AppColors.darkButton,
+      brightness: Brightness.dark,
+      primary: AppColors.darkButton,
+      onPrimary: AppColors.darkBackground,
+      secondary: AppColors.darkHighlight,
+      surface: AppColors.darkSurface,
+      onSurface: AppColors.darkText,
+      error: AppColors.danger,
+    );
+    final base = ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      colorScheme: scheme,
+      scaffoldBackgroundColor: AppColors.darkBackground,
+      primaryColor: AppColors.darkButton,
+      fontFamily: 'serif',
+    );
+
+    return base.copyWith(
+      textTheme: base.textTheme.copyWith(
+        headlineSmall: const TextStyle(fontFamily: 'serif', fontWeight: FontWeight.w600, color: AppColors.darkHighlight, fontSize: 22),
+        titleLarge: const TextStyle(fontFamily: 'serif', fontWeight: FontWeight.w600, color: AppColors.darkText, fontSize: 18),
+        titleMedium: const TextStyle(fontFamily: 'serif', fontWeight: FontWeight.w600, color: AppColors.darkText, fontSize: 16),
+        bodyLarge: const TextStyle(color: AppColors.darkText, fontSize: 15),
+        bodyMedium: const TextStyle(color: AppColors.darkTextSecondary, fontSize: 14),
+        bodySmall: const TextStyle(color: AppColors.darkTextSecondary, fontSize: 12),
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: AppColors.darkBackground,
+        elevation: 0,
+        surfaceTintColor: Colors.transparent,
+        foregroundColor: AppColors.darkText,
+        centerTitle: true,
+        titleTextStyle: TextStyle(fontFamily: 'serif', fontWeight: FontWeight.w600, color: AppColors.darkText, fontSize: 19),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.darkButton,
+          foregroundColor: AppColors.darkBackground,
+          minimumSize: const Size.fromHeight(52),
+          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: 0.4),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+          elevation: 0,
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.darkText,
+          minimumSize: const Size.fromHeight(52),
+          side: const BorderSide(color: AppColors.darkBorder, width: 1.3),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: AppColors.darkHighlight)),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: AppColors.darkSecondary,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        hintStyle: const TextStyle(color: AppColors.darkTextSecondary, fontSize: 14),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: const BorderSide(color: AppColors.darkBorder)),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: const BorderSide(color: AppColors.darkBorder)),
+        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: const BorderSide(color: AppColors.darkButton, width: 1.6)),
+        errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: const BorderSide(color: AppColors.danger)),
+      ),
+      cardTheme: CardThemeData(color: AppColors.darkSurface, elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg))),
+      dividerTheme: const DividerThemeData(color: AppColors.darkBorder, thickness: 1),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: AppColors.darkSurface,
+        contentTextStyle: const TextStyle(color: AppColors.darkText),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
+      ),
+      listTileTheme: const ListTileThemeData(iconColor: AppColors.darkTextSecondary, textColor: AppColors.darkText),
+      checkboxTheme: CheckboxThemeData(fillColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.selected) ? AppColors.darkButton : null), checkColor: WidgetStateProperty.all(AppColors.darkBackground)),
+      switchTheme: SwitchThemeData(thumbColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.selected) ? AppColors.darkButton : AppColors.darkTextSecondary), trackColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.selected) ? AppColors.darkSecondary : AppColors.darkBorder)),
+    );
+  }
+
 }

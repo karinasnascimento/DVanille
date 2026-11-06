@@ -21,13 +21,16 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
         builder: (context, _) {
           final endereco = state.enderecoSelecionado ?? state.enderecoPrincipal;
           final isDelivery = state.tipoEntregaSelecionada == TipoEntrega.delivery;
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+          final primaryText = isDark ? AppColors.darkText : AppColors.brownStrong;
+          final secondaryText = isDark ? AppColors.darkTextSecondary : AppColors.textMuted;
           return Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Como você quer receber?',
-                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: AppColors.brownStrong)),
+                Text('Como você quer receber?',
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: primaryText)),
                 const SizedBox(height: 14),
                 Row(
                   children: [
@@ -52,7 +55,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                 ),
                 const SizedBox(height: 26),
                 if (isDelivery) ...[
-                  const Text('ENDEREÇO', style: TextStyle(fontWeight: FontWeight.w700, color: AppColors.brownStrong, fontSize: 13)),
+                  Text('ENDEREÇO', style: TextStyle(fontWeight: FontWeight.w700, color: primaryText, fontSize: 13)),
                   const SizedBox(height: 10),
                   if (endereco == null)
                     DVanilleCard(
@@ -71,10 +74,10 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(endereco.apelido, style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.brownStrong)),
+                          Text(endereco.apelido, style: TextStyle(fontWeight: FontWeight.w700, color: primaryText)),
                           const SizedBox(height: 2),
-                          Text(endereco.enderecoResumido, style: const TextStyle(color: AppColors.textMuted, fontSize: 13)),
-                          Text(endereco.cidadeEstado, style: const TextStyle(color: AppColors.textMuted, fontSize: 13)),
+                          Text(endereco.enderecoResumido, style: TextStyle(color: secondaryText, fontSize: 13)),
+                          Text(endereco.cidadeEstado, style: TextStyle(color: secondaryText, fontSize: 13)),
                         ],
                       ),
                     ),
@@ -86,17 +89,17 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                     child: const Text('ALTERAR ENDEREÇO'),
                   ),
                   const SizedBox(height: 20),
-                  const Text('Tempo estimado: 25–40 min', style: TextStyle(color: AppColors.textMuted)),
+                  Text('Tempo estimado: 25–40 min', style: TextStyle(color: secondaryText)),
                 ] else ...[
                   DVanilleCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text('D\'Vanille — Loja Boutique', style: TextStyle(fontWeight: FontWeight.w700, color: AppColors.brownStrong)),
+                      children: [
+                        Text('D\'Vanille — Loja Boutique', style: TextStyle(fontWeight: FontWeight.w700, color: primaryText)),
                         SizedBox(height: 4),
-                        Text('Rua das Flores, 45 — São Paulo - SP', style: TextStyle(color: AppColors.textMuted, fontSize: 13)),
+                        Text('Rua das Flores, 45 — São Paulo - SP', style: TextStyle(color: secondaryText, fontSize: 13)),
                         SizedBox(height: 10),
-                        Text('Tempo de preparo estimado: 15–25 min', style: TextStyle(color: AppColors.textMuted, fontSize: 13)),
+                        Text('Tempo de preparo estimado: 15–25 min', style: TextStyle(color: secondaryText, fontSize: 13)),
                       ],
                     ),
                   ),
@@ -129,24 +132,28 @@ class _OptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final selectedColor = isDark ? AppColors.darkButton : AppColors.brown;
+    final cardColor = isDark ? AppColors.darkSurface : AppColors.white;
+    final textColor = isDark ? AppColors.darkText : AppColors.brownStrong;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 22),
         decoration: BoxDecoration(
-          color: selected ? AppColors.brown : AppColors.white,
+          color: selected ? selectedColor : cardColor,
           borderRadius: BorderRadius.circular(AppRadius.lg),
-          border: Border.all(color: selected ? AppColors.brown : AppColors.beige),
+          border: Border.all(color: selected ? selectedColor : (isDark ? AppColors.darkBorder : AppColors.beige)),
         ),
         child: Column(
           children: [
-            Icon(icon, color: selected ? Colors.white : AppColors.brownStrong, size: 28),
+            Icon(icon, color: selected ? (isDark ? AppColors.darkBackground : Colors.white) : textColor, size: 28),
             const SizedBox(height: 8),
             Text(
               label,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: selected ? Colors.white : AppColors.brownStrong,
+                color: selected ? (isDark ? AppColors.darkBackground : Colors.white) : textColor,
                 fontWeight: FontWeight.w700,
                 fontSize: 12.5,
               ),

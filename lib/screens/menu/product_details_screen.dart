@@ -21,11 +21,12 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     final state = AppState.instance;
     final p = widget.product;
     final preco = p.emOferta ? p.precoOferta! : p.preco;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.brownStrong),
+          icon: Icon(Icons.arrow_back, color: isDark ? AppColors.darkTextSecondary : AppColors.brownStrong),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
@@ -54,7 +55,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               width: double.infinity,
               height: 200,
               decoration: BoxDecoration(
-                color: AppColors.beige.withValues(alpha: 0.35),
+                color: isDark ? AppColors.darkSurface : AppColors.beige.withValues(alpha: 0.35),
                 borderRadius: BorderRadius.circular(AppRadius.lg),
               ),
               alignment: Alignment.center,
@@ -66,11 +67,11 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             Row(
               children: [
                 Text('R\$ ${preco.toStringAsFixed(2).replaceAll('.', ',')}',
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.brownStrong)),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: isDark ? AppColors.darkText : AppColors.brownStrong)),
                 if (p.emOferta) ...[
                   const SizedBox(width: 8),
                   Text('R\$ ${p.preco.toStringAsFixed(2).replaceAll('.', ',')}',
-                      style: const TextStyle(color: AppColors.textMuted, decoration: TextDecoration.lineThrough)),
+                      style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted, decoration: TextDecoration.lineThrough)),
                 ],
                 const Spacer(),
                 Text(p.tamanho, style: Theme.of(context).textTheme.bodySmall),
@@ -93,8 +94,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
             const SectionTitle('Restrições / alergênicos'),
             p.restricoes.isEmpty
-                ? const Text('Nenhuma restrição cadastrada para este produto.',
-                    style: TextStyle(color: AppColors.textMuted, fontSize: 13))
+                ? Text(
+                    'Nenhuma restrição cadastrada para este produto.',
+                    style: TextStyle(
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted,
+                      fontSize: 13,
+                    ),
+                  )
                 : Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -110,14 +116,18 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             const SizedBox(height: 20),
             Row(
               children: [
-                const Text('Quantidade', style: TextStyle(color: AppColors.brownStrong, fontWeight: FontWeight.w600)),
+                Text('Quantidade', style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.brownStrong, fontWeight: FontWeight.w600)),
                 const Spacer(),
-                _qtyButton(Icons.remove, () {
-                  if (quantidade > 1) setState(() => quantidade--);
-                }),
+                _qtyButton(
+                  Icons.remove,
+                  () {
+                    if (quantidade > 1) setState(() => quantidade--);
+                  },
+                  enabled: quantidade > 1,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text('$quantidade', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+                  child: Text('$quantidade', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: isDark ? AppColors.darkText : AppColors.brownStrong)),
                 ),
                 _qtyButton(Icons.add, () => setState(() => quantidade++)),
               ],
@@ -141,13 +151,26 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _qtyButton(IconData icon, VoidCallback onTap) {
+  Widget _qtyButton(IconData icon, VoidCallback onTap, {bool enabled = true}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
-      onTap: onTap,
+      onTap: enabled ? onTap : null,
       child: Container(
         padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(color: AppColors.beige.withValues(alpha: 0.5), shape: BoxShape.circle),
-        child: Icon(icon, size: 18, color: AppColors.brownStrong),
+        decoration: BoxDecoration(
+          color: isDark
+              ? (enabled ? AppColors.darkButton : AppColors.darkSurface)
+              : AppColors.beige.withValues(alpha: enabled ? 0.5 : 0.25),
+          shape: BoxShape.circle,
+          border: isDark && !enabled ? Border.all(color: AppColors.darkBorder) : null,
+        ),
+        child: Icon(
+          icon,
+          size: 18,
+          color: isDark
+              ? (enabled ? AppColors.darkBackground : AppColors.darkTextSecondary)
+              : AppColors.brownStrong,
+        ),
       ),
     );
   }

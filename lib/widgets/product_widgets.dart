@@ -228,10 +228,11 @@ class RestrictionChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: AppColors.pink.withValues(alpha: 0.45),
+        color: isDark ? AppColors.darkSurface : AppColors.pink.withValues(alpha: 0.45),
         borderRadius: BorderRadius.circular(AppRadius.pill),
       ),
       child: Row(
@@ -239,16 +240,16 @@ class RestrictionChip extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(fontSize: 12, color: AppColors.brownStrong),
+            style: TextStyle(fontSize: 12, color: isDark ? AppColors.darkHighlight : AppColors.brownStrong),
           ),
           if (onRemove != null) ...[
             const SizedBox(width: 4),
             GestureDetector(
               onTap: onRemove,
-              child: const Icon(
+              child: Icon(
                 Icons.close,
                 size: 14,
-                color: AppColors.brownStrong,
+                color: isDark ? AppColors.darkText : AppColors.brownStrong,
               ),
             ),
           ],
@@ -265,26 +266,27 @@ class NutritionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: 84,
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.beige.withValues(alpha: 0.35),
+        color: isDark ? AppColors.darkSurface : AppColors.beige.withValues(alpha: 0.35),
         borderRadius: BorderRadius.circular(AppRadius.md),
       ),
       child: Column(
         children: [
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w700,
-              color: AppColors.brownStrong,
+              color: isDark ? AppColors.darkText : AppColors.brownStrong,
             ),
           ),
           const SizedBox(height: 2),
           Text(
             label,
-            style: const TextStyle(fontSize: 11, color: AppColors.textMuted),
+            style: TextStyle(fontSize: 11, color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted),
           ),
         ],
       ),

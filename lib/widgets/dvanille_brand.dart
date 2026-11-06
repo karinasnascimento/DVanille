@@ -18,7 +18,9 @@ class DVanilleLogo extends StatelessWidget {
           fontFamily: 'serif',
           fontSize: height * 0.4,
           fontWeight: FontWeight.w600,
-          color: AppColors.brownStrong,
+          color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkText
+                  : AppColors.brownStrong,
         ),
       ),
     );
@@ -83,13 +85,13 @@ class DVanilleHeader extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: showBack
           ? IconButton(
-              icon: const Icon(Icons.arrow_back, color: AppColors.brownStrong),
+              icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface),
               onPressed: () => Navigator.of(context).pop(),
             )
           : (showDrawerButton
               ? Builder(
                   builder: (ctx) => IconButton(
-                    icon: const Icon(Icons.menu, color: AppColors.brownStrong),
+                    icon: Icon(Icons.menu, color: Theme.of(context).colorScheme.onSurface),
                     onPressed: () => Scaffold.of(ctx).openDrawer(),
                   ),
                 )
@@ -132,8 +134,9 @@ class DVanilleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Material(
-      color: AppColors.white,
+      color: isDark ? AppColors.darkSurface : AppColors.white,
       borderRadius: BorderRadius.circular(AppRadius.lg),
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -142,7 +145,7 @@ class DVanilleCard extends StatelessWidget {
           padding: padding,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.lg),
-            border: Border.all(color: AppColors.beige.withValues(alpha: 0.6)),
+            border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.beige.withValues(alpha: 0.6)),
           ),
           child: child,
         ),
@@ -182,11 +185,13 @@ class SectionTitle extends StatelessWidget {
         children: [
           Text(
             text.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w700,
               letterSpacing: 1.1,
               fontSize: 13,
-              color: AppColors.brownStrong,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkText
+                  : AppColors.brownStrong,
             ),
           ),
           ?trailing,
@@ -220,7 +225,7 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 56, color: AppColors.beige),
+            Icon(icon, size: 56, color: Theme.of(context).colorScheme.secondary),
             const SizedBox(height: 16),
             Text(
               message,
@@ -254,24 +259,25 @@ class AllergenNotice extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppColors.pink.withValues(alpha: 0.35),
+        color: isDark ? AppColors.darkSecondary : AppColors.pink.withValues(alpha: 0.35),
         borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: AppColors.pink),
+        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.pink),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Icon(Icons.warning_amber_rounded, color: AppColors.brownStrong, size: 20),
-          SizedBox(width: 10),
+        children: [
+          Icon(Icons.warning_amber_rounded, color: isDark ? AppColors.darkHighlight : AppColors.brownStrong, size: 20),
+          const SizedBox(width: 10),
           Expanded(
             child: Text(
               'As informações de ingredientes e alergênicos são baseadas nos dados '
               'cadastrados para o produto. Em caso de alergia ou restrição, confirme '
               'as informações antes do consumo.',
-              style: TextStyle(fontSize: 12.5, color: AppColors.brownStrong, height: 1.4),
+              style: TextStyle(fontSize: 12.5, color: isDark ? AppColors.darkText : AppColors.brownStrong, height: 1.4),
             ),
           ),
         ],

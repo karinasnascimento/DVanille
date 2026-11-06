@@ -37,6 +37,14 @@ class AppState extends ChangeNotifier {
   // ------------------------------------------------------------------
   // Autenticação (simulada)
   // ------------------------------------------------------------------
+  bool isDarkMode = false;
+
+  void setDarkMode(bool enabled) {
+    if (isDarkMode == enabled) return;
+    isDarkMode = enabled;
+    notifyListeners();
+  }
+
   bool isLoggedIn = false;
   bool isAdmin = false;
   AppUser user = AppUser(

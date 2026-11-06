@@ -12,14 +12,15 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = AppState.instance;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: DVanilleHeader(
         showDrawerButton: true,
         actions: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.notifications_none,
-              color: AppColors.brownStrong,
+              color: isDark ? AppColors.darkHighlight : AppColors.brownStrong,
             ),
             onPressed: () => Navigator.pushNamed(context, '/notificacoes'),
           ),
@@ -44,7 +45,7 @@ class HomeScreen extends StatelessWidget {
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontFamily: 'CreamCake',
                     fontSize: 50,
-                    color: AppColors.danger,
+                    color: isDark ? AppColors.darkHighlight : AppColors.danger,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -61,21 +62,21 @@ class HomeScreen extends StatelessWidget {
                       vertical: 14,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.white,
+                      color: isDark ? AppColors.darkSurface : AppColors.white,
                       borderRadius: BorderRadius.circular(AppRadius.pill),
-                      border: Border.all(color: AppColors.beige),
+                      border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.beige),
                     ),
                     child: Row(
-                      children: const [
+                      children: [
                         Icon(
                           Icons.search,
-                          color: AppColors.textMuted,
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted,
                           size: 20,
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         Text(
                           'O que você procura?',
-                          style: TextStyle(color: AppColors.textMuted),
+                          style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted),
                         ),
                       ],
                     ),
@@ -157,7 +158,7 @@ class HomeScreen extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AppColors.pink.withValues(alpha: 0.45),
+                      color: isDark ? AppColors.darkSurface : AppColors.pink.withValues(alpha: 0.45),
                       borderRadius: BorderRadius.circular(AppRadius.lg),
                     ),
                     child: Column(
@@ -169,9 +170,9 @@ class HomeScreen extends StatelessWidget {
                               ? 'Confira nossas ofertas especiais'
                               : '${ofertas.length} produtos em oferta especial',
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: AppColors.brownStrong,
+                            color: isDark ? AppColors.darkText : AppColors.brownStrong,
                           ),
                         ),
                       ],
@@ -196,8 +197,9 @@ class _HomeDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = AppState.instance;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Drawer(
-      backgroundColor: AppColors.cream,
+      backgroundColor: isDark ? AppColors.darkSecondary : AppColors.cream,
       child: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -209,7 +211,7 @@ class _HomeDrawer extends StatelessWidget {
                 child: DVanilleLogo(height: 100),
               ),
               const SizedBox(height: 0.1),
-              const Divider(),
+              Divider(color: isDark ? AppColors.darkBorder : AppColors.beige),
               _drawerItem(
                 context,
                 Icons.home_outlined,
@@ -289,11 +291,11 @@ class _HomeDrawer extends StatelessWidget {
     VoidCallback onTap,
   ) {
     return ListTile(
-      leading: Icon(icon, color: AppColors.brownStrong),
+      leading: Icon(icon, color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.brownStrong),
       title: Text(
         label,
-        style: const TextStyle(
-          color: AppColors.brownStrong,
+        style: TextStyle(
+          color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong,
           fontWeight: FontWeight.w500,
         ),
       ),

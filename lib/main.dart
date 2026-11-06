@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'models/models.dart';
 import 'theme/app_theme.dart';
+import 'state/app_state.dart';
 
 import 'screens/auth/auth_screens.dart';
 import 'screens/home/main_nav_screen.dart';
@@ -30,10 +31,15 @@ class DVanilleApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final state = AppState.instance;
+    return ListenableBuilder(
+      listenable: state,
+      builder: (context, _) => MaterialApp(
       title: "D'Vanille",
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: state.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       initialRoute: '/login',
       routes: {
         // Autenticação
@@ -93,6 +99,7 @@ class DVanilleApp extends StatelessWidget {
         }
         return null;
       },
+      ),
     );
   }
 }

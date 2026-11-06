@@ -103,20 +103,21 @@ class ProfileScreen extends StatelessWidget {
     String label,
     String route,
   ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return DVanilleCard(
       onTap: () => Navigator.pushNamed(context, route),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: ListTile(
         contentPadding: EdgeInsets.zero,
-        leading: Icon(icon, color: AppColors.brownStrong),
+        leading: Icon(icon, color: isDark ? AppColors.darkTextSecondary : AppColors.brownStrong),
         title: Text(
           label,
-          style: const TextStyle(
-            color: AppColors.brownStrong,
+          style: TextStyle(
+            color: isDark ? AppColors.darkText : AppColors.brownStrong,
             fontWeight: FontWeight.w500,
           ),
         ),
-        trailing: const Icon(Icons.chevron_right, color: AppColors.textMuted),
+        trailing: Icon(Icons.chevron_right, color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted),
       ),
     );
   }

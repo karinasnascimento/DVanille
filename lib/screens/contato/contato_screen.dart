@@ -11,7 +11,7 @@ class ContatoScreen extends StatelessWidget {
       appBar: const DVanilleHeader(showBack: true),
       body: Column(
         children: [
-          const Divider(height: 1),
+          Divider(height: 1),
           Expanded(
             child: SingleChildScrollView(
               child: Center(
@@ -22,12 +22,12 @@ class ContatoScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         const _ContatoHeader(),
-                        const SizedBox(height: 28),
+                        SizedBox(height: 28),
                         LayoutBuilder(
                           builder: (context, constraints) {
                             final wide = constraints.maxWidth >= 760;
                             if (wide) {
-                              return const Row(
+                              return Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Expanded(child: _InfoCard()),
@@ -36,7 +36,7 @@ class ContatoScreen extends StatelessWidget {
                                 ],
                               );
                             }
-                            return const Column(
+                            return Column(
                               children: [
                                 _InfoCard(),
                                 SizedBox(height: 22),
@@ -45,7 +45,7 @@ class ContatoScreen extends StatelessWidget {
                             );
                           },
                         ),
-                        const SizedBox(height: 32),
+                        SizedBox(height: 32),
                       ],
                     ),
                   ),
@@ -64,7 +64,7 @@ class _ContatoHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         Text(
           'Fale conosco',
@@ -73,7 +73,7 @@ class _ContatoHeader extends StatelessWidget {
             fontFamily: 'CreamCake',
             fontSize: 42,
             height: 1.1,
-            color: AppColors.danger,
+            color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkHighlight : AppColors.danger,
           ),
         ),
         SizedBox(height: 10),
@@ -85,7 +85,7 @@ class _ContatoHeader extends StatelessWidget {
             fontSize: 17,
             fontWeight: FontWeight.w600,
             height: 1.35,
-            color: AppColors.brownStrong,
+            color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong,
           ),
         ),
       ],
@@ -120,30 +120,30 @@ class _InfoCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Informações',
             style: TextStyle(
               fontFamily: 'CreamCake',
               fontSize: 32,
               height: 1.1,
-              color: AppColors.brown,
+              color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.brown,
             ),
           ),
-          const SizedBox(height: 18),
+          SizedBox(height: 18),
           for (int i = 0; i < _items.length; i++) ...[
-            if (i > 0) const SizedBox(height: 14),
+            if (i > 0) SizedBox(height: 14),
             _InfoRow(item: _items[i]),
           ],
-          const SizedBox(height: 22),
-          const Divider(),
-          const SizedBox(height: 12),
-          const Text(
+          SizedBox(height: 22),
+          Divider(),
+          SizedBox(height: 12),
+          Text(
             "Equipe D'Vanille: Ana Clara, Julia, Karina e Viviane.",
             style: TextStyle(
               fontStyle: FontStyle.italic,
               fontSize: 14.5,
               height: 1.45,
-              color: AppColors.brown,
+              color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.brown,
             ),
           ),
         ],
@@ -165,19 +165,19 @@ class _InfoRow extends StatelessWidget {
           width: 36,
           height: 36,
           decoration: BoxDecoration(
-            color: AppColors.pink.withValues(alpha: 0.45),
+            color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkHighlight.withValues(alpha: 0.16) : AppColors.pink.withValues(alpha: 0.45),
             shape: BoxShape.circle,
           ),
-          child: Icon(item.icon, size: 18, color: AppColors.brown),
+          child: Icon(item.icon, size: 18, color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.brown),
         ),
-        const SizedBox(width: 12),
+        SizedBox(width: 12),
         Expanded(
           child: Text(
             item.text,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 14.5,
               height: 1.4,
-              color: AppColors.brownStrong,
+              color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong,
             ),
           ),
         ),
@@ -265,19 +265,19 @@ class _ContatoFormCardState extends State<_ContatoFormCard> {
     return InputDecoration(
       hintText: hint,
       filled: true,
-      fillColor: AppColors.cream,
-      hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 14),
-      errorStyle: const TextStyle(
-        color: AppColors.brownStrong,
+      fillColor: Theme.of(context).brightness == Brightness.dark ? AppColors.darkSecondary : AppColors.cream,
+      hintStyle: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.textMuted, fontSize: 14),
+      errorStyle: TextStyle(
+        color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong,
         fontSize: 12,
         fontWeight: FontWeight.w600,
       ),
       errorMaxLines: 2,
-      border: border(AppColors.beige),
-      enabledBorder: border(AppColors.beige),
-      focusedBorder: border(AppColors.brown, 1.6),
-      errorBorder: border(AppColors.brownStrong, 1.3),
-      focusedErrorBorder: border(AppColors.brownStrong, 1.6),
+      border: border(Theme.of(context).brightness == Brightness.dark ? AppColors.darkBorder : AppColors.beige),
+      enabledBorder: border(Theme.of(context).brightness == Brightness.dark ? AppColors.darkBorder : AppColors.beige),
+      focusedBorder: border(Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.brown, 1.6),
+      errorBorder: border(Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong, 1.3),
+      focusedErrorBorder: border(Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong, 1.6),
     );
   }
 
@@ -300,7 +300,7 @@ class _ContatoFormCardState extends State<_ContatoFormCard> {
       minLines: minLines,
       validator: validator,
       autovalidateMode: _autovalidate,
-      style: const TextStyle(color: AppColors.brownStrong, fontSize: 14.5),
+      style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong, fontSize: 14.5),
       decoration: _decoration(hint),
     );
   }
@@ -328,16 +328,16 @@ class _ContatoFormCardState extends State<_ContatoFormCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Envie uma mensagem',
               style: TextStyle(
                 fontFamily: 'CreamCake',
                 fontSize: 32,
                 height: 1.1,
-                color: AppColors.brown,
+                color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.brown,
               ),
             ),
-            const SizedBox(height: 18),
+            SizedBox(height: 18),
             LayoutBuilder(
               builder: (context, c) {
                 if (c.maxWidth >= 420) {
@@ -345,24 +345,24 @@ class _ContatoFormCardState extends State<_ContatoFormCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(child: nome),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Expanded(child: email),
                     ],
                   );
                 }
                 return Column(
-                  children: [nome, const SizedBox(height: 14), email],
+                  children: [nome, SizedBox(height: 14), email],
                 );
               },
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _field(
               controller: _assuntoCtrl,
               hint: 'Assunto',
               validator: _validateAssunto,
               capitalization: TextCapitalization.sentences,
             ),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             _field(
               controller: _mensagemCtrl,
               hint: 'Mensagem',
@@ -373,10 +373,10 @@ class _ContatoFormCardState extends State<_ContatoFormCard> {
               maxLines: 6,
               minLines: 5,
             ),
-            const SizedBox(height: 22),
+            SizedBox(height: 22),
             ElevatedButton(
               onPressed: _enviar,
-              child: const Text('Enviar mensagem'),
+              child: Text('Enviar mensagem'),
             ),
           ],
         ),

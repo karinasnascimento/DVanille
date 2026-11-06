@@ -12,10 +12,11 @@ class MenuFilters {
 }
 
 Future<MenuFilters?> showFilterBottomSheet(BuildContext context, MenuFilters current) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
   return showModalBottomSheet<MenuFilters>(
     context: context,
     isScrollControlled: true,
-    backgroundColor: AppColors.cream,
+    backgroundColor: isDark ? AppColors.darkSecondary : AppColors.cream,
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
     ),
@@ -41,6 +42,8 @@ class _FilterSheetState extends State<_FilterSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accentColor = isDark ? AppColors.darkButton : AppColors.brown;
     return DraggableScrollableSheet(
       initialChildSize: 0.85,
       minChildSize: 0.5,
@@ -50,7 +53,7 @@ class _FilterSheetState extends State<_FilterSheet> {
         return Column(
           children: [
             const SizedBox(height: 10),
-            Container(width: 40, height: 4, decoration: BoxDecoration(color: AppColors.beige, borderRadius: BorderRadius.circular(4))),
+            Container(width: 40, height: 4, decoration: BoxDecoration(color: isDark ? AppColors.darkBorder : AppColors.beige, borderRadius: BorderRadius.circular(4))),
             const SizedBox(height: 14),
             Text('FILTRAR PRODUTOS', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
@@ -64,7 +67,7 @@ class _FilterSheetState extends State<_FilterSheet> {
                     value: null,
                     groupValue: filters.categoria,
                     title: const Text('Todas'),
-                    activeColor: AppColors.brown,
+                    activeColor: accentColor,
                     contentPadding: EdgeInsets.zero,
                     onChanged: (v) => setState(() => filters.categoria = v),
                   ),
@@ -72,7 +75,7 @@ class _FilterSheetState extends State<_FilterSheet> {
                         value: cat,
                         groupValue: filters.categoria,
                         title: Text(cat.label),
-                        activeColor: AppColors.brown,
+                        activeColor: accentColor,
                         contentPadding: EdgeInsets.zero,
                         onChanged: (v) => setState(() => filters.categoria = v),
                       )),
@@ -80,8 +83,8 @@ class _FilterSheetState extends State<_FilterSheet> {
                   const SectionTitleSmall('Restrições alimentares'),
                   ...DietaryRestriction.values.map((r) => CheckboxListTile(
                         value: filters.restricoes.contains(r),
-                        title: Text(r.label, style: const TextStyle(fontSize: 13.5)),
-                        activeColor: AppColors.brown,
+                        title: Text(r.label, style: TextStyle(fontSize: 13.5, color: Theme.of(context).colorScheme.onSurface)),
+                        activeColor: accentColor,
                         controlAffinity: ListTileControlAffinity.leading,
                         contentPadding: EdgeInsets.zero,
                         onChanged: (v) => setState(() {
@@ -128,15 +131,16 @@ class SectionTitleSmall extends StatelessWidget {
   const SectionTitleSmall(this.text, {super.key});
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
       padding: const EdgeInsets.only(top: 14, bottom: 6),
       child: Text(
         text.toUpperCase(),
-        style: const TextStyle(
+        style: TextStyle(
           fontWeight: FontWeight.w700,
           fontSize: 12.5,
           letterSpacing: 1,
-          color: AppColors.brownStrong,
+          color: isDark ? AppColors.darkTextSecondary : AppColors.brownStrong,
         ),
       ),
     );

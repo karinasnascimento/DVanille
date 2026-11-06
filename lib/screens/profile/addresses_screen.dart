@@ -10,6 +10,9 @@ class AddressesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = AppState.instance;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryText = isDark ? AppColors.darkText : AppColors.brownStrong;
+    final secondaryText = isDark ? AppColors.darkTextSecondary : AppColors.textMuted;
     return Scaffold(
       appBar: const DVanilleHeader(title: 'Meus endereços', showBack: true),
       body: ListenableBuilder(
@@ -33,10 +36,10 @@ class AddressesScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(a.apelido.toUpperCase(),
-                              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12, letterSpacing: 0.6, color: AppColors.brownStrong)),
+                              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 12, letterSpacing: 0.6, color: primaryText)),
                           const SizedBox(height: 6),
                           Text(a.enderecoResumido),
-                          Text(a.cidadeEstado, style: const TextStyle(color: AppColors.textMuted, fontSize: 13)),
+                          Text(a.cidadeEstado, style: TextStyle(color: secondaryText, fontSize: 13)),
                           const SizedBox(height: 10),
                           Row(
                             children: [
@@ -188,12 +191,18 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
   }
 
   Widget _field(TextEditingController ctrl, String label, {TextInputType? keyboardType, bool required = false}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final fieldTextColor = isDark ? AppColors.darkText : AppColors.brownStrong;
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: TextFormField(
         controller: ctrl,
         keyboardType: keyboardType,
-        decoration: InputDecoration(hintText: label),
+        style: TextStyle(color: fieldTextColor),
+        decoration: InputDecoration(
+          hintText: label,
+          hintStyle: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted),
+        ),
         validator: required ? (v) => (v == null || v.isEmpty) ? 'Campo obrigatório' : null : null,
       ),
     );

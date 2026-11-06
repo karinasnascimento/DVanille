@@ -21,13 +21,13 @@ class ConhecaScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          const Divider(height: 1),
+          Divider(height: 1),
           Expanded(
             child: SingleChildScrollView(
               child: Center(
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 600),
-                  child: const Padding(
+                  child: Padding(
                     padding: EdgeInsets.fromLTRB(22, 28, 22, 48),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +61,7 @@ class _PurposeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
@@ -70,7 +70,9 @@ class _PurposeHeader extends StatelessWidget {
             fontFamily: 'CreamCake',
             fontSize: 42,
             height: 1.1,
-            color: AppColors.danger,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkHighlight
+                : AppColors.danger,
           ),
         ),
         SizedBox(height: 10),
@@ -81,7 +83,9 @@ class _PurposeHeader extends StatelessWidget {
             fontSize: 17,
             fontWeight: FontWeight.w600,
             height: 1.35,
-            color: AppColors.brownStrong,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkText
+                : AppColors.brownStrong,
           ),
         ),
       ],
@@ -104,16 +108,19 @@ class _InstitutionalText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const style = TextStyle(
+    final style = TextStyle(
       fontSize: 15.5,
       height: 1.6,
-      color: AppColors.brownStrong,
+      color: Theme.of(context).brightness == Brightness.dark
+          ? AppColors.darkText
+          : AppColors.brownStrong,
     );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (int i = 0; i < _paragraphs.length; i++) ...[
-          if (i > 0) const SizedBox(height: 16),
+          if (i > 0) SizedBox(height: 16),
           Text(_paragraphs[i], style: style),
         ],
       ],
@@ -134,7 +141,12 @@ class _CafeteriaImage extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppRadius.lg),
-          border: Border.all(color: AppColors.beige, width: 1.3),
+          border: Border.all(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkBorder
+                : AppColors.beige,
+            width: 1.3,
+          ),
         ),
         child: AspectRatio(
           aspectRatio: 4 / 3,
@@ -155,10 +167,12 @@ class _ImagePlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.beige.withValues(alpha: 0.35),
+      color: Theme.of(context).brightness == Brightness.dark
+          ? AppColors.darkSurface
+          : AppColors.beige.withValues(alpha: 0.35),
       alignment: Alignment.center,
       padding: const EdgeInsets.all(16),
-      child: const Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           BowDecoration(size: 48),
@@ -166,7 +180,12 @@ class _ImagePlaceholder extends StatelessWidget {
           Text(
             'Foto da cafeteria',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 13, color: AppColors.textMuted),
+            style: TextStyle(
+              fontSize: 13,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.textMuted,
+            ),
           ),
         ],
       ),
@@ -183,11 +202,17 @@ class _HighlightQuote extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
       decoration: BoxDecoration(
-        color: AppColors.pink.withValues(alpha: 0.55),
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.darkSecondary
+            : AppColors.pink.withValues(alpha: 0.55),
         borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border.all(color: AppColors.pink),
+        border: Border.all(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.darkHighlight
+              : AppColors.pink,
+        ),
       ),
-      child: const Column(
+      child: Column(
         children: [
           SizedBox(height: 7),
           Text(
@@ -197,7 +222,9 @@ class _HighlightQuote extends StatelessWidget {
               fontSize: 21,
               fontWeight: FontWeight.w600,
               height: 1.35,
-              color: AppColors.brownStrong,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkText
+                  : AppColors.brownStrong,
             ),
           ),
         ],
@@ -239,18 +266,20 @@ class _BeliefsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'O que acreditamos',
           style: TextStyle(
             fontFamily: 'CreamCake',
             fontSize: 32,
             height: 1.1,
-            color: AppColors.brown,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? AppColors.darkTextSecondary
+                : AppColors.brown,
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: 16),
         for (int i = 0; i < _beliefs.length; i++) ...[
-          if (i > 0) const SizedBox(height: 12),
+          if (i > 0) SizedBox(height: 12),
           _BeliefTile(belief: _beliefs[i]),
         ],
       ],
@@ -273,32 +302,44 @@ class _BeliefTile extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: AppColors.pink.withValues(alpha: 0.45),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkHighlight.withValues(alpha: 0.16)
+                  : AppColors.pink.withValues(alpha: 0.45),
               shape: BoxShape.circle,
             ),
-            child: Icon(belief.icon, size: 22, color: AppColors.brown),
+            child: Icon(
+              belief.icon,
+              size: 22,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.brown,
+            ),
           ),
-          const SizedBox(width: 14),
+          SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   belief.title.toUpperCase(),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
                     letterSpacing: 1.1,
-                    color: AppColors.brownStrong,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.darkText
+                        : AppColors.brownStrong,
                   ),
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: 6),
                 Text(
                   belief.description,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14.5,
                     height: 1.45,
-                    color: AppColors.brownStrong,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? AppColors.darkText
+                        : AppColors.brownStrong,
                   ),
                 ),
               ],
@@ -315,7 +356,7 @@ class _Address extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
+    return SizedBox(
       width: double.infinity,
       child: Column(
         children: [
@@ -328,7 +369,9 @@ class _Address extends StatelessWidget {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w700,
-              color: AppColors.brownStrong,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkText
+                  : AppColors.brownStrong,
             ),
           ),
 
@@ -341,7 +384,9 @@ class _Address extends StatelessWidget {
               fontStyle: FontStyle.italic,
               fontSize: 15.5,
               height: 1.4,
-              color: AppColors.brown,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.brown,
             ),
           ),
 
@@ -353,7 +398,9 @@ class _Address extends StatelessWidget {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w700,
-              color: AppColors.brownStrong,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkText
+                  : AppColors.brownStrong,
             ),
           ),
 
@@ -366,7 +413,9 @@ class _Address extends StatelessWidget {
               fontStyle: FontStyle.italic,
               fontSize: 15.5,
               height: 1.4,
-              color: AppColors.brown,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.brown,
             ),
           ),
         ],

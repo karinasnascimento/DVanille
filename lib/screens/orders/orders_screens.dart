@@ -62,14 +62,14 @@ class _OrderTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Pedido ${order.numeroPedido}',
-                    style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.brownStrong)),
+                    style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong)),
                 Text('R\$ ${order.total.toStringAsFixed(2).replaceAll('.', ',')}',
-                    style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.brownStrong)),
+                    style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong)),
               ],
             ),
-            const SizedBox(height: 4),
-            Text(_fmtDate(order.data), style: const TextStyle(color: AppColors.textMuted, fontSize: 12)),
-            const SizedBox(height: 6),
+            SizedBox(height: 4),
+            Text(_fmtDate(order.data), style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.textMuted, fontSize: 12)),
+            SizedBox(height: 6),
             Row(
               children: [
                 Icon(
@@ -77,11 +77,11 @@ class _OrderTile extends StatelessWidget {
                   size: 15,
                   color: ongoing ? AppColors.warning : AppColors.success,
                 ),
-                const SizedBox(width: 6),
-                Text(order.status.label, style: const TextStyle(fontSize: 13, color: AppColors.brownStrong)),
+                SizedBox(width: 6),
+                Text(order.status.label, style: TextStyle(fontSize: 13, color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong)),
               ],
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
@@ -110,7 +110,7 @@ class OrderDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Pedido ${order.numeroPedido}', style: Theme.of(context).textTheme.titleLarge),
-            Text(_fmtDate(order.data), style: const TextStyle(color: AppColors.textMuted)),
+            Text(_fmtDate(order.data), style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.textMuted)),
             const SectionTitle('Produtos'),
             ...order.produtos.map((item) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
@@ -122,22 +122,22 @@ class OrderDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 )),
-            const Divider(height: 28),
+            Divider(height: 28),
             _line('Subtotal', order.subtotal),
             _line('Entrega', order.taxaEntrega),
-            const Divider(),
+            Divider(),
             _line('TOTAL', order.total, bold: true),
-            const SizedBox(height: 14),
+            SizedBox(height: 14),
             Text('Pagamento: ${order.metodoPagamento.label}', style: Theme.of(context).textTheme.bodyMedium),
             Text('Entrega: ${order.tipoEntrega == TipoEntrega.delivery ? 'Delivery' : 'Retirada'}',
                 style: Theme.of(context).textTheme.bodyMedium),
-            const SizedBox(height: 8),
-            Text('Status: ${order.status.label}', style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.brownStrong)),
-            const SizedBox(height: 20),
+            SizedBox(height: 8),
+            Text('Status: ${order.status.label}', style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong)),
+            SizedBox(height: 20),
             if (order.status != StatusPedido.entregue && order.status != StatusPedido.retirado)
               ElevatedButton(
                 onPressed: () => Navigator.pushNamed(context, '/rastreamento', arguments: order),
-                child: const Text('ACOMPANHAR PEDIDO'),
+                child: Text('ACOMPANHAR PEDIDO'),
               ),
           ],
         ),
@@ -179,7 +179,7 @@ class OrderTrackingScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Pedido ${order.numeroPedido}', style: Theme.of(context).textTheme.titleLarge),
-                const SizedBox(height: 20),
+                SizedBox(height: 20),
                 ...List.generate(flow.length, (i) {
                   final done = i <= currentIndex;
                   return Row(
@@ -189,33 +189,33 @@ class OrderTrackingScreen extends StatelessWidget {
                         children: [
                           Icon(
                             done ? Icons.check_circle : Icons.radio_button_unchecked,
-                            color: done ? AppColors.success : AppColors.beige,
+                            color: done ? AppColors.success : (Theme.of(context).brightness == Brightness.dark ? AppColors.darkBorder : AppColors.beige),
                             size: 20,
                           ),
                           if (i != flow.length - 1)
-                            Container(width: 2, height: 34, color: done ? AppColors.success : AppColors.beige),
+                            Container(width: 2, height: 34, color: done ? AppColors.success : (Theme.of(context).brightness == Brightness.dark ? AppColors.darkBorder : AppColors.beige)),
                         ],
                       ),
-                      const SizedBox(width: 12),
+                      SizedBox(width: 12),
                       Padding(
                         padding: const EdgeInsets.only(top: 1),
                         child: Text(
                           flow[i].label,
                           style: TextStyle(
                             fontWeight: done ? FontWeight.w700 : FontWeight.w400,
-                            color: done ? AppColors.brownStrong : AppColors.textMuted,
+                            color: done ? (Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong) : (Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.textMuted),
                           ),
                         ),
                       ),
                     ],
                   );
                 }),
-                const Divider(height: 32),
-                const Text('Previsão: 25–40 minutos', style: TextStyle(color: AppColors.textMuted)),
-                const SizedBox(height: 20),
+                Divider(height: 32),
+                Text('Previsão: 25–40 minutos', style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.textMuted)),
+                SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: finished ? null : () => state.advanceOrderStatus(order),
-                  child: const Text('SIMULAR PRÓXIMO STATUS'),
+                  child: Text('SIMULAR PRÓXIMO STATUS'),
                 ),
               ],
             ),
