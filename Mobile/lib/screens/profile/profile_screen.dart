@@ -40,25 +40,25 @@ class ProfileScreen extends StatelessWidget {
                 _tile(
                   context,
                   Icons.receipt_long_outlined,
-                  'Meus pedidos',
+                  'Meus Pedidos',
                   '/pedidos',
                 ),
                 _tile(
                   context,
                   Icons.favorite_border,
-                  'Meus favoritos',
+                  'Meus Favoritos',
                   '/favoritos',
                 ),
                 _tile(
                   context,
                   Icons.location_on_outlined,
-                  'Meus endereços',
+                  'Meus Endereços',
                   '/enderecos',
                 ),
                 _tile(
                   context,
                   Icons.restaurant_menu_outlined,
-                  'Restrições alimentares',
+                  'Restrições Alimentares',
                   '/restricoes',
                 ),
                 _tile(
@@ -83,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
                   _tile(
                     context,
                     Icons.admin_panel_settings_outlined,
-                    'Área administrativa',
+                    'Área Administrativa',
                     '/admin',
                   ),
                 const SizedBox(height: 20),

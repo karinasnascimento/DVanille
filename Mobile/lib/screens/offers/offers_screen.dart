@@ -51,7 +51,7 @@ class OffersScreen extends StatelessWidget {
                       );
                     },
                   ),
-                const SectionTitle('Vale-presente 🎁'),
+                const SectionTitle('Vale-presente'),
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(18),

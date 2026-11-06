@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 enum DietaryRestriction {
   aplv,
@@ -281,14 +282,14 @@ class AppNotification {
   final String titulo;
   final String mensagem;
   final DateTime data;
-  final String emoji;
+  final IconData icone;
   bool lida;
   AppNotification({
     required this.id,
     required this.titulo,
     required this.mensagem,
     required this.data,
-    this.emoji = '🔔',
+    required this.icone,
     this.lida = false,
   });
 }

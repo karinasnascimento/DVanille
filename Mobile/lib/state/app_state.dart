@@ -27,7 +27,7 @@ class AppState extends ChangeNotifier {
         titulo: 'Nova oferta',
         mensagem: 'Confira o combo da semana.',
         data: DateTime.now(),
-        emoji: '🎁',
+        icone: Icons.card_giftcard,
       ),
     ];
   }
@@ -249,7 +249,7 @@ class AppState extends ChangeNotifier {
     addNotification(
       titulo: 'Pedido realizado',
       mensagem: 'Seu pedido ${order.numeroPedido} foi recebido.',
-      emoji: '🔔',
+      icone: Icons.receipt_long,
     );
     notifyListeners();
     return order;
@@ -270,7 +270,7 @@ class AppState extends ChangeNotifier {
       addNotification(
         titulo: 'Atualização do pedido',
         mensagem: 'Pedido ${order.numeroPedido}: ${order.status.label}.',
-        emoji: '🔔',
+        icone: Icons.local_shipping_outlined,
       );
       notifyListeners();
     }
@@ -325,7 +325,7 @@ class AppState extends ChangeNotifier {
   void addNotification({
     required String titulo,
     required String mensagem,
-    String emoji = '🔔',
+    required IconData icone,
   }) {
     notifications.insert(
       0,
@@ -334,7 +334,7 @@ class AppState extends ChangeNotifier {
         titulo: titulo,
         mensagem: mensagem,
         data: DateTime.now(),
-        emoji: emoji,
+        icone: icone,
       ),
     );
   }
