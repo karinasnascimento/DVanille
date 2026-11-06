@@ -1,0 +1,474 @@
+// D'Vanille - schema do banco (MySQL via Prisma)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  READY
+  OUT_FOR_DELIVERY
+  DELIVERED
+  CANCELLED
+}
+
+enum DeliveryType {
+  DELIVERY
+  PICKUP
+}
+
+enum PaymentMethod {
+  PIX
+  CREDIT_CARD
+  DEBIT_CARD
+  CASH
+}
+
+enum PaymentStatus {
+  PENDING
+  APPROVED
+  DECLINED
+  REFUNDED
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+enum NotificationType {
+  ORDER_CREATED
+  ORDER_CONFIRMED
+  ORDER_PREPARING
+  ORDER_READY
+  ORDER_OUT_FOR_DELIVERY
+  ORDER_DELIVERED
+  ORDER_CANCELLED
+  PAYMENT
+  PROMOTION
+  REWARD
+  SYSTEM
+}
+
+enum LoyaltyTransactionType {
+  EARNED
+  REDEEMED
+  ADJUSTED
+}
+
+// ---------------------------------------------------------------
+// Usuários e endereços
+// ---------------------------------------------------------------
+
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(120)
+  email         String   @unique @db.VarChar(191)
+  passwordHash  String   @db.VarChar(255)
+  phone         String?  @db.VarChar(30)
+  role          Role     @default(CUSTOMER)
+  profileImage  String?  @db.VarChar(255)
+  isActive      Boolean  @default(true)
+  loyaltyPoints Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  addresses           Address[]
+  favorites           Favorite[]
+  cart                Cart?
+  orders              Order[]
+  reviews             Review[]
+  notifications       Notification[]
+  loyaltyTransactions LoyaltyTransaction[]
+  promotionUsages     PromotionUsage[]
+
+  @@index([role])
+  @@map("users")
+}
+
+model Address {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  label         String   @db.VarChar(50)
+  recipientName String   @db.VarChar(120)
+  street        String   @db.VarChar(160)
+  number        String   @db.VarChar(20)
+  complement    String?  @db.VarChar(100)
+  neighborhood  String   @db.VarChar(100)
+  city          String   @db.VarChar(100)
+  state         String   @db.VarChar(2)
+  zipCode       String   @db.VarChar(9)
+  reference     String?  @db.VarChar(200)
+  isDefault     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@index([userId])
+  @@map("addresses")
+}
+
+// ---------------------------------------------------------------
+// Catálogo
+// ---------------------------------------------------------------
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(100)
+  slug        String   @unique @db.VarChar(120)
+  description String?  @db.VarChar(500)
+  image       String?  @db.VarChar(255)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id               Int      @id @default(autoincrement())
+  categoryId       Int
+  name             String   @db.VarChar(160)
+  slug             String   @unique @db.VarChar(180)
+  description      String?  @db.Text
+  price            Decimal  @db.Decimal(10, 2)
+  promotionalPrice Decimal? @db.Decimal(10, 2)
+  image            String?  @db.VarChar(255)
+  sku              String?  @unique @db.VarChar(60)
+  stock            Int      @default(0)
+  isAvailable      Boolean  @default(true)
+  isActive         Boolean  @default(true)
+  isFeatured       Boolean  @default(false)
+  preparationTime  Int? // minutos
+  calories         Int? // kcal
+  carbohydrates    Decimal? @db.Decimal(7, 2) // g
+  proteins         Decimal? @db.Decimal(7, 2) // g
+  fats             Decimal? @db.Decimal(7, 2) // g
+  fiber            Decimal? @db.Decimal(7, 2) // g
+  sodium           Decimal? @db.Decimal(9, 2) // mg
+  ingredients      String?  @db.Text
+  allergens        String?  @db.Text
+
+  // Restrições alimentares (estruturadas)
+  containsGluten   Boolean @default(false)
+  containsLactose  Boolean @default(false)
+  containsMilk     Boolean @default(false)
+  containsEggs     Boolean @default(false)
+  containsSoy      Boolean @default(false)
+  containsPeanuts  Boolean @default(false)
+  containsNuts     Boolean @default(false)
+  containsSugar    Boolean @default(false)
+  isVegetarian     Boolean @default(false)
+  isVegan          Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  category   Category    @relation(fields: [categoryId], references: [id])
+  favorites  Favorite[]
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+  reviews    Review[]
+
+  @@index([categoryId])
+  @@index([isActive, isAvailable])
+  @@index([isFeatured])
+  @@index([name])
+  @@map("products")
+}
+
+// ---------------------------------------------------------------
+// Favoritos e carrinho
+// ---------------------------------------------------------------
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@index([productId])
+  @@map("favorites")
+}
+
+model Cart {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @unique
+  promotionId Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  promotion Promotion? @relation(fields: [promotionId], references: [id], onDelete: SetNull)
+  items     CartItem[]
+
+  @@index([promotionId])
+  @@map("carts")
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  cartId    Int
+  productId Int
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, productId])
+  @@index([productId])
+  @@map("cart_items")
+}
+
+// ---------------------------------------------------------------
+// Pedidos e pagamentos
+// ---------------------------------------------------------------
+
+model Order {
+  id              Int           @id @default(autoincrement())
+  orderNumber     String        @unique @db.VarChar(30)
+  userId          Int
+  addressId       Int?
+  deliveryAddress Json? // cópia do endereço no momento do pedido
+  promotionId     Int?
+  couponCode      String?       @db.VarChar(50)
+  subtotal        Decimal       @db.Decimal(10, 2)
+  discount        Decimal       @default(0) @db.Decimal(10, 2)
+  deliveryFee     Decimal       @default(0) @db.Decimal(10, 2)
+  total           Decimal       @db.Decimal(10, 2)
+  paymentMethod   PaymentMethod
+  paymentStatus   PaymentStatus @default(PENDING)
+  orderStatus     OrderStatus   @default(PENDING)
+  deliveryType    DeliveryType
+  notes           String?       @db.VarChar(500)
+  cancelledAt     DateTime?
+  deliveredAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  user          User                 @relation(fields: [userId], references: [id])
+  address       Address?             @relation(fields: [addressId], references: [id], onDelete: SetNull)
+  promotion     Promotion?           @relation(fields: [promotionId], references: [id], onDelete: SetNull)
+  items         OrderItem[]
+  payment       Payment?
+  statusHistory OrderStatusHistory[]
+  reviews       Review[]
+  promotionUsage PromotionUsage?
+
+  @@index([userId, createdAt])
+  @@index([orderStatus])
+  @@index([paymentStatus])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id          Int     @id @default(autoincrement())
+  orderId     Int
+  productId   Int
+  productName String  @db.VarChar(160)
+  quantity    Int
+  unitPrice   Decimal @db.Decimal(10, 2)
+  subtotal    Decimal @db.Decimal(10, 2)
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model OrderStatusHistory {
+  id        Int         @id @default(autoincrement())
+  orderId   Int
+  status    OrderStatus
+  note      String?     @db.VarChar(255)
+  createdAt DateTime    @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@map("order_status_history")
+}
+
+model Payment {
+  id            Int           @id @default(autoincrement())
+  orderId       Int           @unique
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  amount        Decimal       @db.Decimal(10, 2)
+  provider      String        @default("simulated") @db.VarChar(40)
+  transactionId String?       @unique @db.VarChar(80)
+  pixCode       String?       @db.Text
+  cardBrand     String?       @db.VarChar(30)
+  cardLast4     String?       @db.VarChar(4)
+  failureReason String?       @db.VarChar(255)
+  paidAt        DateTime?
+  refundedAt    DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@map("payments")
+}
+
+// ---------------------------------------------------------------
+// Promoções
+// ---------------------------------------------------------------
+
+model Promotion {
+  id            Int          @id @default(autoincrement())
+  name          String       @db.VarChar(120)
+  description   String?      @db.VarChar(500)
+  code          String       @unique @db.VarChar(50)
+  type          DiscountType
+  value         Decimal      @db.Decimal(10, 2)
+  startsAt      DateTime
+  endsAt        DateTime
+  usageLimit    Int?
+  usedCount     Int          @default(0)
+  perUserLimit  Int          @default(1)
+  minOrderValue Decimal?     @db.Decimal(10, 2)
+  isActive      Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  carts  Cart[]
+  orders Order[]
+  usages PromotionUsage[]
+
+  @@index([isActive, startsAt, endsAt])
+  @@map("promotions")
+}
+
+model PromotionUsage {
+  id             Int      @id @default(autoincrement())
+  promotionId    Int
+  userId         Int
+  orderId        Int      @unique
+  discountAmount Decimal  @db.Decimal(10, 2)
+  createdAt      DateTime @default(now())
+
+  promotion Promotion @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order     Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([promotionId, userId])
+  @@map("promotion_usages")
+}
+
+// ---------------------------------------------------------------
+// Avaliações, notificações e fidelidade
+// ---------------------------------------------------------------
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  orderId   Int
+  rating    Int
+  comment   String?  @db.VarChar(1000)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId, orderId])
+  @@index([productId])
+  @@map("reviews")
+}
+
+model Notification {
+  id        Int              @id @default(autoincrement())
+  userId    Int
+  title     String           @db.VarChar(160)
+  message   String           @db.VarChar(500)
+  type      NotificationType @default(SYSTEM)
+  isRead    Boolean          @default(false)
+  data      Json?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@index([userId, createdAt])
+  @@map("notifications")
+}
+
+model LoyaltyReward {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(120)
+  description String?  @db.VarChar(500)
+  pointsCost  Int
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  transactions LoyaltyTransaction[]
+
+  @@map("loyalty_rewards")
+}
+
+model LoyaltyTransaction {
+  id           Int                    @id @default(autoincrement())
+  userId       Int
+  orderId      Int?
+  rewardId     Int?
+  type         LoyaltyTransactionType
+  points       Int // sempre positivo; o sinal é dado por "type"
+  balanceAfter Int
+  description  String                 @db.VarChar(255)
+  createdAt    DateTime               @default(now())
+
+  user   User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reward LoyaltyReward? @relation(fields: [rewardId], references: [id], onDelete: SetNull)
+
+  @@index([userId, createdAt])
+  @@index([orderId])
+  @@map("loyalty_transactions")
+}
+
+// ---------------------------------------------------------------
+// Sessões encerradas (logout real de JWT)
+// ---------------------------------------------------------------
+
+model RevokedToken {
+  id        Int      @id @default(autoincrement())
+  jti       String   @unique @db.VarChar(64)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([expiresAt])
+  @@map("revoked_tokens")
+}

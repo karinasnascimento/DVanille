@@ -1,0 +1,55 @@
+# Ambiente de DESENVOLVIMENTO: API + MySQL.
+# As senhas abaixo são apenas para uso local; sobrescreva com variáveis de ambiente se quiser.
+#
+#   docker compose up --build
+#
+# API:   http://localhost:3000/api/health
+# Docs:  http://localhost:3000/api/docs
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: dvanille-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_dev_only}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-dvanille}
+      MYSQL_USER: ${MYSQL_USER:-dvanille}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-dvanille_dev_only}
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - dvanille_mysql_data:/var/lib/mysql
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  api:
+    build: .
+    container_name: dvanille-api
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: 3000
+      DATABASE_URL: mysql://${MYSQL_USER:-dvanille}:${MYSQL_PASSWORD:-dvanille_dev_only}@mysql:3306/${MYSQL_DATABASE:-dvanille}
+      JWT_SECRET: ${JWT_SECRET:-dev_only_secret_change_me_before_any_real_use_0123456789}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000,http://localhost:5173,http://localhost:8080}
+      UPLOAD_DIR: /app/uploads
+      RUN_SEED: ${RUN_SEED:-true}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-Admin@123456}
+      SEED_CUSTOMER_PASSWORD: ${SEED_CUSTOMER_PASSWORD:-Cliente@123456}
+    ports:
+      - "${PORT:-3000}:3000"
+    volumes:
+      - dvanille_uploads:/app/uploads
+
+volumes:
+  dvanille_mysql_data:
+  dvanille_uploads:
