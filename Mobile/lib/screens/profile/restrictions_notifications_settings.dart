@@ -112,9 +112,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => AppState.instance.markAllNotificationsRead(),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      AppState.instance.markAllNotificationsRead();
+    });
   }
 
   @override
@@ -198,8 +198,7 @@ class SettingsScreen extends StatelessWidget {
           ListenableBuilder(
             listenable: AppState.instance,
             builder: (context, _) => SwitchListTile(
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 12),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 12),
               secondary: const Icon(Icons.dark_mode_outlined),
               title: const Text('Modo escuro'),
               subtitle: const Text(

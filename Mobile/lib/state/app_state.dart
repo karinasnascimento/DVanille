@@ -249,7 +249,7 @@ class AppState extends ChangeNotifier {
     addNotification(
       titulo: 'Pedido realizado',
       mensagem: 'Seu pedido ${order.numeroPedido} foi recebido.',
-      icone: Icons.receipt_long,
+      icone: Icons.receipt_long_rounded,
     );
     notifyListeners();
     return order;
@@ -262,6 +262,7 @@ class AppState extends ChangeNotifier {
     trocoPara = null;
   }
 
+
   void advanceOrderStatus(Order order) {
     final flow = order.fluxoStatus;
     final idx = flow.indexOf(order.status);
@@ -270,7 +271,7 @@ class AppState extends ChangeNotifier {
       addNotification(
         titulo: 'Atualização do pedido',
         mensagem: 'Pedido ${order.numeroPedido}: ${order.status.label}.',
-        icone: Icons.local_shipping_outlined,
+        icone: Icons.outbond,
       );
       notifyListeners();
     }
