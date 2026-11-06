@@ -362,6 +362,10 @@ class AppState extends ChangeNotifier {
     return true;
   }
 
+  bool validarSenhaDemonstracao(String senha) {
+    return senha == _senhaDemonstracao;
+  }
+
   void updateUserRestrictions(Set<DietaryRestriction> restrictions) {
     user.restricoes = restrictions;
     notifyListeners();

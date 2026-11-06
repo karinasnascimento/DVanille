@@ -337,41 +337,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     return;
                   }
 
-                  final novaSenha = _senhaCtrl.text;
-                  final confirmacao = _confirmarSenhaCtrl.text;
+                  final email = _emailCtrl.text.trim().toLowerCase();
+                  final senha = _senhaCtrl.text;
 
-                  if (novaSenha.isNotEmpty) {
-                    if (novaSenha != confirmacao) {
-                      showBrandSnackBar(context, 'As senhas não coincidem.');
-                      return;
-                    }
+                  final isAdmin = email == 'admin@dvanille.com';
+                  final emailUsuario = AppState.instance.user.email
+                      .trim()
+                      .toLowerCase();
 
-                    final sucesso = AppState.instance
-                        .atualizarSenhaDemonstracao(novaSenha);
+                  final emailValido = isAdmin || email == emailUsuario;
+                  final senhaValida = AppState.instance
+                      .validarSenhaDemonstracao(senha);
 
-                    if (!sucesso) {
-                      showBrandSnackBar(
-                        context,
-                        'A senha deve ter pelo menos 4 caracteres.',
-                      );
-                      return;
-                    }
+                  if (!emailValido || !senhaValida) {
+                    showBrandSnackBar(context, 'E-mail ou senha incorretos.');
+                    return;
                   }
 
-                  AppState.instance.updateProfile(
-                    nome: _nomeCtrl.text.trim(),
-                    email: _emailCtrl.text.trim(),
-                    telefone: _telCtrl.text.replaceAll(RegExp(r'\D'), ''),
-                  );
+                  AppState.instance.login(admin: isAdmin);
 
-                  showBrandSnackBar(
+                  Navigator.pushNamedAndRemoveUntil(
                     context,
-                    novaSenha.isEmpty
-                        ? 'Perfil atualizado com sucesso!'
-                        : 'Perfil e senha de demonstração atualizados!',
+                    isAdmin ? '/admin' : '/main',
+                    (r) => false,
                   );
-
-                  Navigator.pop(context);
                 },
 
                 child: const Text('SALVAR ALTERAÇÕES'),
