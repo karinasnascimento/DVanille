@@ -4,6 +4,46 @@ import '../state/app_state.dart';
 import '../theme/app_theme.dart';
 import 'dvanille_brand.dart';
 
+
+class ProductImage extends StatelessWidget {
+  final String source;
+  final BoxFit fit;
+  final double? width;
+  final double? height;
+  final double fallbackFontSize;
+
+  const ProductImage({
+    super.key,
+    required this.source,
+    this.fit = BoxFit.contain,
+    this.width,
+    this.height,
+    this.fallbackFontSize = 36,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (source.startsWith('assets/')) {
+      return Image.asset(
+        source,
+        width: width,
+        height: height,
+        fit: fit,
+        errorBuilder: (_, __, ___) => _fallback(),
+      );
+    }
+    return _fallback();
+  }
+
+  Widget _fallback() => SizedBox(
+        width: width,
+        height: height,
+        child: Center(
+          child: Text(source, style: TextStyle(fontSize: fallbackFontSize)),
+        ),
+      );
+}
+
 class ProductCard extends StatelessWidget {
   final Product product;
   final VoidCallback onTap;
@@ -12,6 +52,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final state = AppState.instance;
     final isFav = state.isFavorite(product.id);
     final precoExibido = product.emOferta
@@ -25,9 +66,11 @@ class ProductCard extends StatelessWidget {
           onTap: onTap,
           child: Container(
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: isDark ? AppColors.darkSurface : AppColors.white,
               borderRadius: BorderRadius.circular(AppRadius.lg),
-              border: Border.all(color: AppColors.beige.withValues(alpha: 0.6)),
+              border: Border.all(
+                color: isDark ? AppColors.darkBorder : AppColors.beige.withValues(alpha: 0.6),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,18 +78,22 @@ class ProductCard extends StatelessWidget {
                 Stack(
                   children: [
                     Container(
-                      height: 96,
+                      height: 112,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: AppColors.beige.withValues(alpha: 0.35),
+                        color: isDark ? AppColors.darkSecondary : AppColors.beige.withValues(alpha: 0.35),
                         borderRadius: const BorderRadius.vertical(
                           top: Radius.circular(AppRadius.lg),
                         ),
                       ),
                       alignment: Alignment.center,
-                      child: Text(
-                        product.imagem,
-                        style: const TextStyle(fontSize: 40),
+                      clipBehavior: Clip.antiAlias,
+                      child: ProductImage(
+                        source: product.imagem,
+                        width: double.infinity,
+                        height: 112,
+                        fit: BoxFit.contain,
+                        fallbackFontSize: 40,
                       ),
                     ),
                     Positioned(
@@ -65,8 +112,8 @@ class ProductCard extends StatelessWidget {
                         },
                         child: Container(
                           padding: const EdgeInsets.all(5),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
+                          decoration: BoxDecoration(
+                            color: isDark ? AppColors.darkBackground : Colors.white,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -104,7 +151,7 @@ class ProductCard extends StatelessWidget {
                   ],
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+                  padding: const EdgeInsets.fromLTRB(9, 7, 9, 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -112,10 +159,10 @@ class ProductCard extends StatelessWidget {
                         product.nome,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 13.5,
-                          color: AppColors.brownStrong,
+                          fontSize: 12.5,
+                          color: isDark ? AppColors.darkText : AppColors.brownStrong,
                         ),
                       ),
 
@@ -125,13 +172,14 @@ class ProductCard extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           'R\$ ${product.preco.toStringAsFixed(2).replaceAll('.', ',')}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 10.5,
-                            color: AppColors.textMuted,
+                            color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted,
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),
-                      ],
+                      ] else
+                        const SizedBox(height: 4),
 
                       const SizedBox(height: 3),
 
@@ -140,10 +188,10 @@ class ProductCard extends StatelessWidget {
                         children: [
                           Text(
                             'R\$ ${precoExibido.toStringAsFixed(2).replaceAll('.', ',')}',
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontWeight: FontWeight.w700,
-                              fontSize: 13,
-                              color: AppColors.brownStrong,
+                              fontSize: 12,
+                              color: isDark ? AppColors.darkText : AppColors.brownStrong,
                             ),
                           ),
 
@@ -158,13 +206,13 @@ class ProductCard extends StatelessWidget {
                             },
                             child: Container(
                               padding: const EdgeInsets.all(5),
-                              decoration: const BoxDecoration(
-                                color: AppColors.brown,
+                              decoration: BoxDecoration(
+                                color: isDark ? AppColors.darkButton : AppColors.brown,
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.add,
-                                color: Colors.white,
+                                color: AppColors.cream,
                                 size: 16,
                               ),
                             ),
@@ -196,24 +244,34 @@ class CategoryChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: selected ? AppColors.brown : AppColors.white,
+          color: selected
+              ? (isDark ? AppColors.darkButton : AppColors.brown)
+              : (isDark ? AppColors.darkSurface : AppColors.white),
           borderRadius: BorderRadius.circular(AppRadius.pill),
           border: Border.all(
-            color: selected ? AppColors.brown : AppColors.beige,
+            color: selected
+                ? (isDark ? AppColors.darkButton : AppColors.brown)
+                : (isDark ? AppColors.darkBorder : AppColors.beige),
           ),
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: selected ? Colors.white : AppColors.brownStrong,
+        child: Center(
+          child: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+            color: selected
+                ? (isDark ? AppColors.darkBackground : Colors.white)
+                : (isDark ? AppColors.darkText : AppColors.brownStrong),
             fontWeight: FontWeight.w600,
-            fontSize: 13,
+              fontSize: 13,
+            ),
           ),
         ),
       ),

@@ -3,6 +3,7 @@ import '../theme/app_theme.dart';
 
 class DVanilleLogo extends StatelessWidget {
   final double height;
+
   const DVanilleLogo({super.key, this.height = 64});
 
   @override
@@ -19,8 +20,8 @@ class DVanilleLogo extends StatelessWidget {
           fontSize: height * 0.4,
           fontWeight: FontWeight.w600,
           color: Theme.of(context).brightness == Brightness.dark
-                  ? AppColors.darkText
-                  : AppColors.brownStrong,
+              ? AppColors.darkText
+              : AppColors.brownStrong,
         ),
       ),
     );
@@ -29,6 +30,7 @@ class DVanilleLogo extends StatelessWidget {
 
 class DVanilleMark extends StatelessWidget {
   final double size;
+
   const DVanilleMark({super.key, this.size = 34});
 
   @override
@@ -42,7 +44,11 @@ class DVanilleMark extends StatelessWidget {
         errorBuilder: (_, __, ___) => CircleAvatar(
           radius: size / 2,
           backgroundColor: AppColors.pink,
-          child: Icon(Icons.local_florist, color: AppColors.brownStrong, size: size * 0.55),
+          child: Icon(
+            Icons.local_florist,
+            color: AppColors.brownStrong,
+            size: size * 0.55,
+          ),
         ),
       ),
     );
@@ -51,6 +57,7 @@ class DVanilleMark extends StatelessWidget {
 
 class BowDecoration extends StatelessWidget {
   final double size;
+
   const BowDecoration({super.key, this.size = 46});
 
   @override
@@ -59,7 +66,11 @@ class BowDecoration extends StatelessWidget {
       'assets/lacinho.png',
       height: size,
       fit: BoxFit.contain,
-      errorBuilder: (_, __, ___) => Icon(Icons.favorite, color: AppColors.pink, size: size * 0.6),
+      errorBuilder: (_, __, ___) => Icon(
+        Icons.favorite,
+        color: AppColors.pink,
+        size: size * 0.6,
+      ),
     );
   }
 }
@@ -82,30 +93,40 @@ class DVanilleHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final headerIconColor =
+        isDark ? AppColors.darkText : AppColors.brownStrong;
+
     return AppBar(
       leading: showBack
           ? IconButton(
-              icon: Icon(Icons.arrow_back, color: Theme.of(context).colorScheme.onSurface),
+              icon: Icon(
+                Icons.arrow_back,
+                color: headerIconColor,
+              ),
               onPressed: () => Navigator.of(context).pop(),
             )
           : (showDrawerButton
               ? Builder(
                   builder: (ctx) => IconButton(
-                    icon: Icon(Icons.menu, color: Theme.of(context).colorScheme.onSurface),
+                    icon: Icon(
+                      Icons.menu,
+                      color: headerIconColor,
+                    ),
                     onPressed: () => Scaffold.of(ctx).openDrawer(),
                   ),
                 )
               : null),
-              title: title == null
-              ? const DVanilleLogo(height: 70)
-              : Text(
-                title!,
-                style: const TextStyle(
-                  fontFamily: 'CreamCake',
-                  fontSize: 40,
-                  color: AppColors.danger,
-                ),
+      title: title == null
+          ? const DVanilleLogo(height: 70)
+          : Text(
+              title!,
+              style: const TextStyle(
+                fontFamily: 'CreamCake',
+                fontSize: 40,
+                color: AppColors.danger,
               ),
+            ),
       actions: [
         ...?actions,
         if (showMark)
@@ -125,6 +146,7 @@ class DVanilleCard extends StatelessWidget {
   final Widget child;
   final EdgeInsetsGeometry padding;
   final VoidCallback? onTap;
+
   const DVanilleCard({
     super.key,
     required this.child,
@@ -135,6 +157,7 @@ class DVanilleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Material(
       color: isDark ? AppColors.darkSurface : AppColors.white,
       borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -145,7 +168,11 @@ class DVanilleCard extends StatelessWidget {
           padding: padding,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.lg),
-            border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.beige.withValues(alpha: 0.6)),
+            border: Border.all(
+              color: isDark
+                  ? AppColors.darkBorder
+                  : AppColors.beige.withValues(alpha: 0.6),
+            ),
           ),
           child: child,
         ),
@@ -174,6 +201,7 @@ void showBrandSnackBar(BuildContext context, String message, {IconData? icon}) {
 class SectionTitle extends StatelessWidget {
   final String text;
   final Widget? trailing;
+
   const SectionTitle(this.text, {super.key, this.trailing});
 
   @override
@@ -203,6 +231,7 @@ class SectionTitle extends StatelessWidget {
 
 class EmptyState extends StatelessWidget {
   final IconData icon;
+  final Color? iconColor;
   final String message;
   final String? subtitle;
   final String? buttonLabel;
@@ -211,6 +240,7 @@ class EmptyState extends StatelessWidget {
   const EmptyState({
     super.key,
     required this.icon,
+    this.iconColor,
     required this.message,
     this.subtitle,
     this.buttonLabel,
@@ -225,7 +255,11 @@ class EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 56, color: Theme.of(context).colorScheme.secondary),
+            Icon(
+              icon,
+              size: 56,
+              color: iconColor ?? Theme.of(context).colorScheme.secondary,
+            ),
             const SizedBox(height: 16),
             Text(
               message,
@@ -260,24 +294,37 @@ class AllergenNotice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkSecondary : AppColors.pink.withValues(alpha: 0.35),
+        color: isDark
+            ? AppColors.darkSecondary
+            : AppColors.pink.withValues(alpha: 0.35),
         borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.pink),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.pink,
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.warning_amber_rounded, color: isDark ? AppColors.darkHighlight : AppColors.brownStrong, size: 20),
+          Icon(
+            Icons.warning_amber_rounded,
+            color: isDark ? AppColors.darkHighlight : AppColors.brownStrong,
+            size: 20,
+          ),
           const SizedBox(width: 10),
           Expanded(
             child: Text(
               'As informações de ingredientes e alergênicos são baseadas nos dados '
               'cadastrados para o produto. Em caso de alergia ou restrição, confirme '
               'as informações antes do consumo.',
-              style: TextStyle(fontSize: 12.5, color: isDark ? AppColors.darkText : AppColors.brownStrong, height: 1.4),
+              style: TextStyle(
+                fontSize: 12.5,
+                color: isDark ? AppColors.darkText : AppColors.brownStrong,
+                height: 1.4,
+              ),
             ),
           ),
         ],

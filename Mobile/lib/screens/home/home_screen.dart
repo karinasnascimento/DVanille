@@ -31,6 +31,9 @@ class HomeScreen extends StatelessWidget {
         listenable: state,
         builder: (context, _) {
           final populares = state.products.where((p) => p.popular).toList();
+          final destaques = populares.isNotEmpty
+              ? populares
+              : state.products.take(4).toList();
           final outros = state.products;
           final ofertas = state.products.where((p) => p.emOferta).toList();
 
@@ -64,19 +67,27 @@ class HomeScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: isDark ? AppColors.darkSurface : AppColors.white,
                       borderRadius: BorderRadius.circular(AppRadius.pill),
-                      border: Border.all(color: isDark ? AppColors.darkBorder : AppColors.beige),
+                      border: Border.all(
+                        color: isDark ? AppColors.darkBorder : AppColors.beige,
+                      ),
                     ),
                     child: Row(
                       children: [
                         Icon(
                           Icons.search,
-                          color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted,
+                          color: isDark
+                              ? AppColors.darkTextSecondary
+                              : AppColors.textMuted,
                           size: 20,
                         ),
                         const SizedBox(width: 10),
                         Text(
                           'O que você procura?',
-                          style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted),
+                          style: TextStyle(
+                            color: isDark
+                                ? AppColors.darkTextSecondary
+                                : AppColors.textMuted,
+                          ),
                         ),
                       ],
                     ),
@@ -103,15 +114,15 @@ class HomeScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                const SectionTitle('Populares'),
+                SectionTitle(populares.isNotEmpty ? 'Populares' : 'Destaques do cardápio'),
                 SizedBox(
-                  height: 190,
+                  height: 198,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
-                    itemCount: populares.length,
+                    itemCount: destaques.length,
                     separatorBuilder: (_, __) => const SizedBox(width: 12),
                     itemBuilder: (context, i) {
-                      final p = populares[i];
+                      final p = destaques[i];
                       return SizedBox(
                         width: 140,
                         child: ProductCard(
@@ -129,7 +140,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SectionTitle('Mais produtos'),
                 SizedBox(
-                  height: 190,
+                  height: 198,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: outros.length,
@@ -158,12 +169,18 @@ class HomeScreen extends StatelessWidget {
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.darkSurface : AppColors.pink.withValues(alpha: 0.45),
+                      color: isDark
+                          ? AppColors.darkSurface
+                          : AppColors.pink.withValues(alpha: 0.45),
                       borderRadius: BorderRadius.circular(AppRadius.lg),
                     ),
                     child: Column(
                       children: [
-                        const Text('🎁', style: TextStyle(fontSize: 30)),
+                        const Icon(
+                          Icons.card_giftcard,
+                          size: 30,
+                          color: AppColors.danger,
+                        ),
                         const SizedBox(height: 6),
                         Text(
                           ofertas.isEmpty
@@ -172,7 +189,9 @@ class HomeScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: isDark ? AppColors.darkText : AppColors.brownStrong,
+                            color: isDark
+                                ? AppColors.darkText
+                                : AppColors.brownStrong,
                           ),
                         ),
                       ],
@@ -291,11 +310,18 @@ class _HomeDrawer extends StatelessWidget {
     VoidCallback onTap,
   ) {
     return ListTile(
-      leading: Icon(icon, color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.brownStrong),
+      leading: Icon(
+        icon,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? AppColors.darkTextSecondary
+            : AppColors.brownStrong,
+      ),
       title: Text(
         label,
         style: TextStyle(
-          color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? AppColors.darkText
+              : AppColors.brownStrong,
           fontWeight: FontWeight.w500,
         ),
       ),

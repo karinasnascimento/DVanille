@@ -79,6 +79,33 @@ class ProfileScreen extends StatelessWidget {
                   'Configurações',
                   '/configuracoes',
                 ),
+
+                DVanilleCard(
+                  onTap: () {
+                    AppState.instance.logout();
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/login',
+                      (r) => false,
+                    );
+                  },
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 4,
+                  ),
+                  child: ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.logout, color: AppColors.danger),
+                    title: const Text(
+                      'Sair da conta',
+                      style: TextStyle(
+                        color: AppColors.danger,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                
                 if (state.isAdmin)
                   _tile(
                     context,
@@ -109,7 +136,10 @@ class ProfileScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: ListTile(
         contentPadding: EdgeInsets.zero,
-        leading: Icon(icon, color: isDark ? AppColors.darkTextSecondary : AppColors.brownStrong),
+        leading: Icon(
+          icon,
+          color: isDark ? AppColors.darkTextSecondary : AppColors.brownStrong,
+        ),
         title: Text(
           label,
           style: TextStyle(
@@ -117,7 +147,10 @@ class ProfileScreen extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        trailing: Icon(Icons.chevron_right, color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted),
+        trailing: Icon(
+          Icons.chevron_right,
+          color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted,
+        ),
       ),
     );
   }

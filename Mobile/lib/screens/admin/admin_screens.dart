@@ -3,6 +3,7 @@ import '../../models/models.dart';
 import '../../state/app_state.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/dvanille_brand.dart';
+import '../../widgets/product_widgets.dart';
 
 class AdminDashboardScreen extends StatelessWidget {
   const AdminDashboardScreen({super.key});
@@ -132,7 +133,7 @@ class AdminProductsScreen extends StatelessWidget {
               return DVanilleCard(
                 child: Row(
                   children: [
-                    Text(p.imagem, style: const TextStyle(fontSize: 26)),
+                    ClipRRect(borderRadius: BorderRadius.circular(8), child: ProductImage(source: p.imagem, width: 48, height: 48, fallbackFontSize: 26)),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(

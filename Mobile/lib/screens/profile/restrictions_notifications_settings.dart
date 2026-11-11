@@ -23,6 +23,9 @@ class _RestrictionsScreenState extends State<RestrictionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryText = isDark ? AppColors.darkText : AppColors.brownStrong;
+
     return Scaffold(
       appBar: const DVanilleHeader(
         title: 'Minhas restrições',
@@ -36,7 +39,10 @@ class _RestrictionsScreenState extends State<RestrictionsScreen> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Selecione suas condições:',
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: TextStyle(
+                  color: primaryText,
+                  fontSize: 14,
+                ),
               ),
             ),
           ),
@@ -49,7 +55,10 @@ class _RestrictionsScreenState extends State<RestrictionsScreen> {
                       value: selected.contains(r),
                       title: Text(
                         r.label,
-                        style: const TextStyle(fontSize: 13.5),
+                        style: TextStyle(
+                          fontSize: 13.5,
+                          color: primaryText,
+                        ),
                       ),
                       activeColor: AppColors.brown,
                       controlAffinity: ListTileControlAffinity.leading,
@@ -197,16 +206,39 @@ class SettingsScreen extends StatelessWidget {
           ),
           ListenableBuilder(
             listenable: AppState.instance,
-            builder: (context, _) => SwitchListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-              secondary: const Icon(Icons.dark_mode_outlined),
-              title: const Text('Modo escuro'),
-              subtitle: const Text(
-                'Ativar a aparência escura do aplicativo',
-              ),
-              value: AppState.instance.isDarkMode,
-              onChanged: AppState.instance.setDarkMode,
-            ),
+            builder: (context, _) {
+              final isDark =
+                  Theme.of(context).brightness == Brightness.dark;
+
+              return SwitchListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                secondary: Icon(
+                  Icons.dark_mode_outlined,
+                  color: isDark
+                      ? AppColors.darkTextSecondary
+                      : AppColors.brownStrong,
+                ),
+                title: Text(
+                  'Modo escuro',
+                  style: TextStyle(
+                    color: isDark
+                        ? AppColors.darkText
+                        : AppColors.brownStrong,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                subtitle: Text(
+                  'Ativar a aparência escura do aplicativo',
+                  style: TextStyle(
+                    color: isDark
+                        ? AppColors.darkTextSecondary
+                        : AppColors.brown,
+                  ),
+                ),
+                value: AppState.instance.isDarkMode,
+                onChanged: AppState.instance.setDarkMode,
+              );
+            },
           ),
           const Divider(height: 28),
           _tile(
@@ -258,7 +290,8 @@ class SettingsScreen extends StatelessWidget {
     bool showTrailing = true,
     bool bold = false,
   }) {
-    final c = color ?? Theme.of(context).colorScheme.onSurface;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final c = color ?? (isDark ? AppColors.darkText : AppColors.brownStrong);
 
     return ListTile(
       leading: Icon(icon, color: c),
@@ -272,7 +305,9 @@ class SettingsScreen extends StatelessWidget {
       trailing: showTrailing
           ? Icon(
               Icons.chevron_right,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: isDark
+                  ? AppColors.darkTextSecondary
+                  : AppColors.brown,
             )
           : null,
       onTap: onTap,

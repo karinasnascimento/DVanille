@@ -53,7 +53,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('MÉTODO DE PAGAMENTO', style: TextStyle(fontWeight: FontWeight.w700, color: primaryText, fontSize: 13)),
+            Text(
+              'MÉTODO DE PAGAMENTO',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: primaryText,
+                fontSize: 13,
+              ),
+            ),
             const SizedBox(height: 14),
             GridView.count(
               shrinkWrap: true,
@@ -63,20 +70,45 @@ class _PaymentScreenState extends State<PaymentScreen> {
               crossAxisSpacing: 12,
               childAspectRatio: 1.7,
               children: [
-                _method(MetodoPagamento.dinheiro, Icons.payments_outlined, 'DINHEIRO'),
-                _method(MetodoPagamento.cartaoCredito, Icons.credit_card, 'CRÉDITO'),
-                _method(MetodoPagamento.cartaoDebito, Icons.credit_card_outlined, 'DÉBITO'),
+                _method(
+                  MetodoPagamento.dinheiro,
+                  Icons.payments_outlined,
+                  'DINHEIRO',
+                ),
+                _method(
+                  MetodoPagamento.cartaoCredito,
+                  Icons.credit_card,
+                  'CRÉDITO',
+                ),
+                _method(
+                  MetodoPagamento.cartaoDebito,
+                  Icons.credit_card_outlined,
+                  'DÉBITO',
+                ),
                 _method(MetodoPagamento.pix, Icons.qr_code, 'PIX'),
-                _method(MetodoPagamento.carteira, Icons.account_balance_wallet_outlined, 'CARTEIRA'),
+                _method(
+                  MetodoPagamento.carteira,
+                  Icons.account_balance_wallet_outlined,
+                  'CARTEIRA',
+                ),
               ],
             ),
             const SizedBox(height: 20),
             if (metodo == MetodoPagamento.dinheiro) _cashSection(),
-            if (metodo == MetodoPagamento.cartaoCredito || metodo == MetodoPagamento.cartaoDebito) _cardSection(),
+            if (metodo == MetodoPagamento.cartaoCredito ||
+                metodo == MetodoPagamento.cartaoDebito)
+              _cardSection(),
             if (metodo == MetodoPagamento.pix) _pixSection(total),
             if (metodo == MetodoPagamento.carteira) _walletSection(),
             const Divider(height: 32),
-            Text('DETALHES', style: TextStyle(fontWeight: FontWeight.w700, color: primaryText, fontSize: 13)),
+            Text(
+              'DETALHES',
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                color: primaryText,
+                fontSize: 13,
+              ),
+            ),
             const SizedBox(height: 10),
             _totalRow('Subtotal', state.cartSubtotal),
             _totalRow('Entrega', state.taxaEntregaAtual),
@@ -84,8 +116,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
             _totalRow('TOTAL', total, bold: true),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: metodo == null ? null : () => _confirmar(context, total),
-              child: Text(metodo == MetodoPagamento.pix ? 'CONFIRMAR PAGAMENTO' : 'CONFIRMAR PAGAMENTO'),
+              style: isDark
+                  ? ElevatedButton.styleFrom(foregroundColor: AppColors.cream)
+                  : null,
+              onPressed: metodo == null
+                  ? null
+                  : () => _confirmar(context, total),
+              child: const Text('CONFIRMAR PAGAMENTO'),
             ),
             const SizedBox(height: 10),
           ],
@@ -98,17 +135,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
     if (metodo == MetodoPagamento.dinheiro && precisaTroco) {
       final valor = double.tryParse(_trocoCtrl.text.replaceAll(',', '.'));
       if (valor == null || valor < total) {
-        setState(() => trocoErro = 'Informe um valor suficiente para cobrir o total.');
+        setState(
+          () => trocoErro = 'Informe um valor suficiente para cobrir o total.',
+        );
         return;
       }
     }
-    if ((metodo == MetodoPagamento.cartaoCredito || metodo == MetodoPagamento.cartaoDebito) &&
-        (_numeroCtrl.text.isEmpty || _nomeCtrl.text.isEmpty || _validadeCtrl.text.isEmpty || _cvvCtrl.text.isEmpty)) {
+    if ((metodo == MetodoPagamento.cartaoCredito ||
+            metodo == MetodoPagamento.cartaoDebito) &&
+        (_numeroCtrl.text.isEmpty ||
+            _nomeCtrl.text.isEmpty ||
+            _validadeCtrl.text.isEmpty ||
+            _cvvCtrl.text.isEmpty)) {
       showBrandSnackBar(context, 'Preencha todos os dados do cartão.');
       return;
     }
     AppState.instance.setMetodoPagamento(metodo!);
-    AppState.instance.trocoPara = precisaTroco ? double.tryParse(_trocoCtrl.text.replaceAll(',', '.')) : null;
+    AppState.instance.trocoPara = precisaTroco
+        ? double.tryParse(_trocoCtrl.text.replaceAll(',', '.'))
+        : null;
     Navigator.pushNamed(context, '/checkout-ok');
   }
 
@@ -124,14 +169,32 @@ class _PaymentScreenState extends State<PaymentScreen> {
         decoration: BoxDecoration(
           color: selected ? selectedColor : unselectedColor,
           borderRadius: BorderRadius.circular(AppRadius.md),
-          border: Border.all(color: selected ? selectedColor : (isDark ? AppColors.darkBorder : AppColors.beige)),
+          border: Border.all(
+            color: selected
+                ? selectedColor
+                : (isDark ? AppColors.darkBorder : AppColors.beige),
+          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: selected ? (isDark ? AppColors.darkBackground : Colors.white) : textColor),
+            Icon(
+              icon,
+              color: selected
+                  ? (isDark ? AppColors.darkBackground : Colors.white)
+                  : textColor,
+            ),
             const SizedBox(height: 6),
-            Text(label, style: TextStyle(color: selected ? (isDark ? AppColors.darkBackground : Colors.white) : textColor, fontWeight: FontWeight.w700, fontSize: 12)),
+            Text(
+              label,
+              style: TextStyle(
+                color: selected
+                    ? (isDark ? AppColors.darkBackground : Colors.white)
+                    : textColor,
+                fontWeight: FontWeight.w700,
+                fontSize: 12,
+              ),
+            ),
           ],
         ),
       ),
@@ -145,16 +208,27 @@ class _PaymentScreenState extends State<PaymentScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Precisa de troco?', style: TextStyle(fontWeight: FontWeight.w600, color: primaryText)),
+          Text(
+            'Precisa de troco?',
+            style: TextStyle(fontWeight: FontWeight.w600, color: primaryText),
+          ),
           const SizedBox(height: 10),
           Row(
             children: [
-              _pill('SIM', precisaTroco, () => setState(() => precisaTroco = true)),
+              _pill(
+                'SIM',
+                precisaTroco,
+                () => setState(() => precisaTroco = true),
+              ),
               const SizedBox(width: 10),
-              _pill('NÃO', !precisaTroco, () => setState(() {
-                    precisaTroco = false;
-                    trocoErro = null;
-                  })),
+              _pill(
+                'NÃO',
+                !precisaTroco,
+                () => setState(() {
+                  precisaTroco = false;
+                  trocoErro = null;
+                }),
+              ),
             ],
           ),
           if (precisaTroco) ...[
@@ -162,7 +236,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
             TextField(
               controller: _trocoCtrl,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(hintText: 'Troco para quanto? (ex: 100,00)', errorText: trocoErro),
+              decoration: InputDecoration(
+                hintText: 'Troco para quanto? (ex: 100,00)',
+                errorText: trocoErro,
+              ),
               onChanged: (_) => setState(() => trocoErro = null),
             ),
           ],
@@ -183,42 +260,88 @@ class _PaymentScreenState extends State<PaymentScreen> {
         decoration: BoxDecoration(
           color: selected ? selectedColor : unselectedColor,
           borderRadius: BorderRadius.circular(AppRadius.pill),
-          border: Border.all(color: selected ? selectedColor : (isDark ? AppColors.darkBorder : AppColors.beige)),
+          border: Border.all(
+            color: selected
+                ? selectedColor
+                : (isDark ? AppColors.darkBorder : AppColors.beige),
+          ),
         ),
-        child: Text(label, style: TextStyle(color: selected ? (isDark ? AppColors.darkBackground : Colors.white) : textColor, fontWeight: FontWeight.w700)),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: selected
+                ? (isDark ? AppColors.darkBackground : Colors.white)
+                : textColor,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
       ),
     );
   }
 
   Widget _cardSection() {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final secondaryText = isDark ? AppColors.darkTextSecondary : AppColors.textMuted;
+    final secondaryText = isDark
+        ? AppColors.darkTextSecondary
+        : AppColors.textMuted;
     return DVanilleCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              _pill('CRÉDITO', metodo == MetodoPagamento.cartaoCredito, () => setState(() => metodo = MetodoPagamento.cartaoCredito)),
+              _pill(
+                'CRÉDITO',
+                metodo == MetodoPagamento.cartaoCredito,
+                () => setState(() => metodo = MetodoPagamento.cartaoCredito),
+              ),
               const SizedBox(width: 10),
-              _pill('DÉBITO', metodo == MetodoPagamento.cartaoDebito, () => setState(() => metodo = MetodoPagamento.cartaoDebito)),
+              _pill(
+                'DÉBITO',
+                metodo == MetodoPagamento.cartaoDebito,
+                () => setState(() => metodo = MetodoPagamento.cartaoDebito),
+              ),
             ],
           ),
           const SizedBox(height: 14),
-          TextField(controller: _numeroCtrl, keyboardType: TextInputType.number, decoration: const InputDecoration(hintText: 'Número do cartão')),
+          TextField(
+            controller: _numeroCtrl,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(hintText: 'Número do cartão'),
+          ),
           const SizedBox(height: 10),
-          TextField(controller: _nomeCtrl, decoration: const InputDecoration(hintText: 'Nome impresso no cartão')),
+          TextField(
+            controller: _nomeCtrl,
+            decoration: const InputDecoration(
+              hintText: 'Nome impresso no cartão',
+            ),
+          ),
           const SizedBox(height: 10),
           Row(
             children: [
-              Expanded(child: TextField(controller: _validadeCtrl, decoration: const InputDecoration(hintText: 'Validade (MM/AA)'))),
+              Expanded(
+                child: TextField(
+                  controller: _validadeCtrl,
+                  decoration: const InputDecoration(
+                    hintText: 'Validade (MM/AA)',
+                  ),
+                ),
+              ),
               const SizedBox(width: 10),
-              Expanded(child: TextField(controller: _cvvCtrl, keyboardType: TextInputType.number, decoration: const InputDecoration(hintText: 'CVV'))),
+              Expanded(
+                child: TextField(
+                  controller: _cvvCtrl,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(hintText: 'CVV'),
+                ),
+              ),
             ],
           ),
           const SizedBox(height: 6),
-          Text('Protótipo — nenhum dado real é processado ou armazenado.',
-              style: TextStyle(fontSize: 11, color: secondaryText)),
+          Text(
+            'Protótipo — nenhum dado real é processado ou armazenado.',
+            style: TextStyle(fontSize: 11, color: secondaryText),
+          ),
         ],
       ),
     );
@@ -232,12 +355,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
         children: [
           Icon(Icons.qr_code_2, size: 84, color: primaryText),
           const SizedBox(height: 10),
-          Text('Valor: R\$ ${total.toStringAsFixed(2).replaceAll('.', ',')}',
-              style: TextStyle(fontWeight: FontWeight.w700, color: primaryText)),
+          Text(
+            'Valor: R\$ ${total.toStringAsFixed(2).replaceAll('.', ',')}',
+            style: TextStyle(fontWeight: FontWeight.w700, color: primaryText),
+          ),
           const SizedBox(height: 6),
           Text(
             pixAguardando ? 'Aguardando pagamento' : 'Pagamento confirmado.',
-            style: TextStyle(color: pixAguardando ? AppColors.warning : AppColors.success, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              color: pixAguardando ? AppColors.warning : AppColors.success,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 12),
           OutlinedButton(
@@ -258,8 +386,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
           Icon(Icons.account_balance_wallet, color: primaryText),
           const SizedBox(width: 10),
           Expanded(
-            child: Text('Carteira digital D\'Vanille selecionada. Protótipo — nenhuma transação real é realizada.',
-                style: TextStyle(fontSize: 13, color: primaryText)),
+            child: Text(
+              'Carteira digital D\'Vanille selecionada. Protótipo — nenhuma transação real é realizada.',
+              style: TextStyle(fontSize: 13, color: primaryText),
+            ),
           ),
         ],
       ),
@@ -272,9 +402,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(fontWeight: bold ? FontWeight.w700 : FontWeight.w400, fontSize: bold ? 16 : 14)),
-          Text('R\$ ${value.toStringAsFixed(2).replaceAll('.', ',')}',
-              style: TextStyle(fontWeight: bold ? FontWeight.w700 : FontWeight.w500, fontSize: bold ? 16 : 14)),
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: bold ? FontWeight.w700 : FontWeight.w400,
+              fontSize: bold ? 16 : 14,
+            ),
+          ),
+          Text(
+            'R\$ ${value.toStringAsFixed(2).replaceAll('.', ',')}',
+            style: TextStyle(
+              fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
+              fontSize: bold ? 16 : 14,
+            ),
+          ),
         ],
       ),
     );

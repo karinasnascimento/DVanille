@@ -77,6 +77,7 @@ class NutritionInfo {
   final double proteinas;
   final double sodio;
   final double gluten;
+  final String glutenStatus;
 
   const NutritionInfo({
     this.calorias = 0,
@@ -85,6 +86,7 @@ class NutritionInfo {
     this.proteinas = 0,
     this.sodio = 0,
     this.gluten = 0,
+    this.glutenStatus = 'Não informado',
   });
 }
 
@@ -121,8 +123,9 @@ class Product {
     this.precoOferta,
   });
 
+  // `restricoes` representa as características/restrições atendidas pelo produto.
   bool isCompativelCom(DietaryRestriction restricao) =>
-      !restricoes.contains(restricao);
+      restricoes.contains(restricao);
 
   bool isCompativelComTodas(Set<DietaryRestriction> selecionadas) {
     if (selecionadas.isEmpty) return true;

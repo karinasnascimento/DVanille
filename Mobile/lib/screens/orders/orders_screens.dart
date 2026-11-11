@@ -21,6 +21,7 @@ class OrdersScreen extends StatelessWidget {
           if (state.orders.isEmpty) {
             return EmptyState(
               icon: Icons.receipt_long_outlined,
+              iconColor: AppColors.danger,
               message: 'Você ainda não fez nenhum pedido.',
               buttonLabel: 'VER CARDÁPIO',
               onButtonTap: () => Navigator.pushNamed(context, '/cardapio'),

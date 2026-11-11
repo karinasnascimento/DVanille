@@ -1,8 +1,10 @@
+
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../state/app_state.dart';
 import '../../theme/app_theme.dart';
 import '../../widgets/dvanille_brand.dart';
+import '../../widgets/product_widgets.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -36,33 +38,68 @@ class CartScreen extends StatelessWidget {
                           width: 52,
                           height: 52,
                           decoration: BoxDecoration(
-                            color: isDark ? AppColors.darkSurface : AppColors.beige.withValues(alpha: 0.4),
+                            color: isDark
+                                ? AppColors.darkSurface
+                                : AppColors.beige.withValues(alpha: 0.4),
                             borderRadius: BorderRadius.circular(AppRadius.sm),
                           ),
                           alignment: Alignment.center,
-                          child: Text(item.produto.imagem, style: const TextStyle(fontSize: 24)),
+                          clipBehavior: Clip.antiAlias,
+                          child: ProductImage(
+                            source: item.produto.imagem,
+                            width: 52,
+                            height: 52,
+                            fallbackFontSize: 24,
+                          ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(item.produto.nome,
-                                  style: TextStyle(fontWeight: FontWeight.w600, color: isDark ? AppColors.darkText : AppColors.brownStrong)),
+                              Text(
+                                item.produto.nome,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: isDark
+                                      ? AppColors.darkText
+                                      : AppColors.brownStrong,
+                                ),
+                              ),
                               const SizedBox(height: 4),
-                              Text('R\$ ${item.precoUnitario.toStringAsFixed(2).replaceAll('.', ',')}',
-                                  style: TextStyle(color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted, fontSize: 13)),
+                              Text(
+                                'R\$ ${item.precoUnitario.toStringAsFixed(2).replaceAll('.', ',')}',
+                                style: TextStyle(
+                                  color: isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.textMuted,
+                                  fontSize: 13,
+                                ),
+                              ),
                             ],
                           ),
                         ),
                         Row(
                           children: [
-                            _qtyBtn(context, Icons.remove, () => state.decrementCartItem(item)),
+                            _qtyBtn(
+                              context,
+                              Icons.remove,
+                              () => state.decrementCartItem(item),
+                            ),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('${item.quantidade}', style: const TextStyle(fontWeight: FontWeight.w700)),
+                              child: Text(
+                                '${item.quantidade}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
                             ),
-                            _qtyBtn(context, Icons.add, () => state.incrementCartItem(item)),
+                            _qtyBtn(
+                              context,
+                              Icons.add,
+                              () => state.incrementCartItem(item),
+                            ),
                           ],
                         ),
                       ],
@@ -74,7 +111,8 @@ class CartScreen extends StatelessWidget {
                 subtotal: state.cartSubtotal,
                 taxa: state.taxaEntregaAtual,
                 buttonLabel: 'CONTINUAR',
-                onContinue: () => Navigator.pushNamed(context, '/revisar-pedido'),
+                onContinue: () =>
+                    Navigator.pushNamed(context, '/revisar-pedido'),
               ),
             ],
           );
@@ -90,10 +128,16 @@ class CartScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(6),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.darkButton : AppColors.beige.withValues(alpha: 0.5),
+          color: isDark
+              ? AppColors.darkButton
+              : AppColors.beige.withValues(alpha: 0.5),
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, size: 15, color: isDark ? AppColors.darkBackground : AppColors.brownStrong),
+        child: Icon(
+          icon,
+          size: 15,
+          color: isDark ? AppColors.darkBackground : AppColors.brownStrong,
+        ),
       ),
     );
   }
@@ -143,6 +187,7 @@ class _CartSummary extends StatelessWidget {
   final double taxa;
   final String buttonLabel;
   final VoidCallback onContinue;
+
   const _CartSummary({
     required this.subtotal,
     required this.taxa,
@@ -153,12 +198,18 @@ class _CartSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final total = subtotal + taxa;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return SafeArea(
       child: Container(
         padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
         decoration: BoxDecoration(
-          color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkSecondary : AppColors.white,
-          border: Border(top: BorderSide(color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkBorder : AppColors.beige)),
+          color: isDark ? AppColors.darkSecondary : AppColors.white,
+          border: Border(
+            top: BorderSide(
+              color: isDark ? AppColors.darkBorder : AppColors.beige,
+            ),
+          ),
         ),
         child: Column(
           children: [
@@ -167,29 +218,52 @@ class _CartSummary extends StatelessWidget {
             const Divider(),
             _row(context, 'TOTAL', total, bold: true),
             const SizedBox(height: 12),
-            ElevatedButton(onPressed: onContinue, child: Text(buttonLabel)),
+            ElevatedButton(
+              style: isDark
+                  ? ElevatedButton.styleFrom(
+                      foregroundColor: AppColors.cream,
+                    )
+                  : null,
+              onPressed: onContinue,
+              child: Text(buttonLabel),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _row(BuildContext context, String label, double value, {bool bold = false}) {
+  Widget _row(
+    BuildContext context,
+    String label,
+    double value, {
+    bool bold = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: TextStyle(
-                  fontWeight: bold ? FontWeight.w700 : FontWeight.w400,
-                  fontSize: bold ? 16 : 14,
-                  color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong)),
-          Text('R\$ ${value.toStringAsFixed(2).replaceAll('.', ',')}',
-              style: TextStyle(
-                  fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
-                  fontSize: bold ? 16 : 14,
-                  color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong)),
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: bold ? FontWeight.w700 : FontWeight.w400,
+              fontSize: bold ? 16 : 14,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkText
+                  : AppColors.brownStrong,
+            ),
+          ),
+          Text(
+            'R\$ ${value.toStringAsFixed(2).replaceAll('.', ',')}',
+            style: TextStyle(
+              fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
+              fontSize: bold ? 16 : 14,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkText
+                  : AppColors.brownStrong,
+            ),
+          ),
         ],
       ),
     );
@@ -202,36 +276,52 @@ class ReviewOrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final state = AppState.instance;
+
     return Scaffold(
-      appBar: const DVanilleHeader(title: 'Revisar pedido', showBack: true),
+      appBar: const DVanilleHeader(
+        title: 'Revisar pedido',
+        showBack: true,
+      ),
       body: ListenableBuilder(
         listenable: state,
         builder: (context, _) {
-          final endereco = state.enderecoSelecionado ?? state.enderecoPrincipal;
+          final endereco =
+              state.enderecoSelecionado ?? state.enderecoPrincipal;
           final isDark = Theme.of(context).brightness == Brightness.dark;
+
           return SingleChildScrollView(
             padding: const EdgeInsets.all(18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SectionTitle('Seus produtos'),
-                ...state.cartItems.map((item) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(child: Text('${item.produto.nome} × ${item.quantidade}')),
-                          Text('R\$ ${item.subtotal.toStringAsFixed(2).replaceAll('.', ',')}'),
-                        ],
-                      ),
-                    )),
+                ...state.cartItems.map(
+                  (item) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '${item.produto.nome} × ${item.quantidade}',
+                          ),
+                        ),
+                        Text(
+                          'R\$ ${item.subtotal.toStringAsFixed(2).replaceAll('.', ',')}',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
                 const Divider(height: 28),
                 const SectionTitle('Entrega'),
                 DVanilleCard(
                   child: Row(
                     children: [
                       Icon(
-                        state.tipoEntregaSelecionada == TipoEntrega.delivery ? Icons.delivery_dining : Icons.storefront,
+                        state.tipoEntregaSelecionada == TipoEntrega.delivery
+                            ? Icons.delivery_dining
+                            : Icons.storefront,
                         color: AppColors.brown,
                       ),
                       const SizedBox(width: 10),
@@ -239,15 +329,36 @@ class ReviewOrderScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(state.tipoEntregaSelecionada == TipoEntrega.delivery ? 'Delivery' : 'Retirar na loja',
-                                style: TextStyle(fontWeight: FontWeight.w600, color: isDark ? AppColors.darkText : AppColors.brownStrong)),
-                            if (state.tipoEntregaSelecionada == TipoEntrega.delivery && endereco != null)
-                              Text(endereco.enderecoResumido, style: TextStyle(fontSize: 12, color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted)),
+                            Text(
+                              state.tipoEntregaSelecionada ==
+                                      TipoEntrega.delivery
+                                  ? 'Delivery'
+                                  : 'Retirar na loja',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: isDark
+                                    ? AppColors.darkText
+                                    : AppColors.brownStrong,
+                              ),
+                            ),
+                            if (state.tipoEntregaSelecionada ==
+                                    TipoEntrega.delivery &&
+                                endereco != null)
+                              Text(
+                                endereco.enderecoResumido,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: isDark
+                                      ? AppColors.darkTextSecondary
+                                      : AppColors.textMuted,
+                                ),
+                              ),
                           ],
                         ),
                       ),
                       TextButton(
-                        onPressed: () => Navigator.pushNamed(context, '/entrega'),
+                        onPressed: () =>
+                            Navigator.pushNamed(context, '/entrega'),
                         child: const Text('ALTERAR'),
                       ),
                     ],
@@ -257,26 +368,45 @@ class ReviewOrderScreen extends StatelessWidget {
                 DVanilleCard(
                   child: Row(
                     children: [
-                      const Icon(Icons.payment, color: AppColors.brown),
+                      const Icon(
+                        Icons.payment,
+                        color: AppColors.brown,
+                      ),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          state.metodoPagamentoSelecionado?.label ?? 'Não selecionado',
-                          style: TextStyle(fontWeight: FontWeight.w600, color: isDark ? AppColors.darkText : AppColors.brownStrong),
+                          state.metodoPagamentoSelecionado?.label ??
+                              'Não selecionado',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: isDark
+                                ? AppColors.darkText
+                                : AppColors.brownStrong,
+                          ),
                         ),
                       ),
                       TextButton(
-                        onPressed: () => Navigator.pushNamed(context, '/pagamento'),
+                        onPressed: () =>
+                            Navigator.pushNamed(context, '/pagamento'),
                         child: const Text('ALTERAR'),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 16),
-                _totals(state.cartSubtotal, state.taxaEntregaAtual),
+                _totals(
+                  state.cartSubtotal,
+                  state.taxaEntregaAtual,
+                ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () => Navigator.pushNamed(context, '/entrega'),
+                  style: isDark
+                      ? ElevatedButton.styleFrom(
+                          foregroundColor: AppColors.cream,
+                        )
+                      : null,
+                  onPressed: () =>
+                      Navigator.pushNamed(context, '/entrega'),
                   child: const Text('CONTINUAR PARA PAGAMENTO'),
                 ),
                 const SizedBox(height: 12),
@@ -290,6 +420,7 @@ class ReviewOrderScreen extends StatelessWidget {
 
   Widget _totals(double subtotal, double taxa) {
     final total = subtotal + taxa;
+
     return DVanilleCard(
       child: Column(
         children: [
@@ -302,14 +433,28 @@ class ReviewOrderScreen extends StatelessWidget {
     );
   }
 
-  Widget _line(String label, double value, {bool bold = false}) => Padding(
+  Widget _line(
+    String label,
+    double value, {
+    bool bold = false,
+  }) =>
+      Padding(
         padding: const EdgeInsets.symmetric(vertical: 2),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label, style: TextStyle(fontWeight: bold ? FontWeight.w700 : FontWeight.w400)),
-            Text('R\$ ${value.toStringAsFixed(2).replaceAll('.', ',')}',
-                style: TextStyle(fontWeight: bold ? FontWeight.w700 : FontWeight.w500)),
+            Text(
+              label,
+              style: TextStyle(
+                fontWeight: bold ? FontWeight.w700 : FontWeight.w400,
+              ),
+            ),
+            Text(
+              'R\$ ${value.toStringAsFixed(2).replaceAll('.', ',')}',
+              style: TextStyle(
+                fontWeight: bold ? FontWeight.w700 : FontWeight.w500,
+              ),
+            ),
           ],
         ),
       );

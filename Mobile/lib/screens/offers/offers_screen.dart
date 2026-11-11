@@ -28,7 +28,7 @@ class OffersScreen extends StatelessWidget {
               children: [
                 const SectionTitle('Ofertas especiais'),
                 if (ofertas.isEmpty)
-                  const EmptyState(icon: Icons.local_offer_outlined, message: 'No momento não há ofertas disponíveis.')
+                  const EmptyState(icon: Icons.local_offer_rounded, message: 'No momento não há ofertas disponíveis.')
                 else
                   GridView.builder(
                     shrinkWrap: true,
@@ -37,7 +37,7 @@ class OffersScreen extends StatelessWidget {
                       crossAxisCount: 2,
                       mainAxisSpacing: 14,
                       crossAxisSpacing: 14,
-                      childAspectRatio: 0.68,
+                      childAspectRatio: 0.78,
                     ),
                     itemCount: ofertas.length,
                     itemBuilder: (context, i) {
@@ -71,7 +71,10 @@ class OffersScreen extends StatelessWidget {
                       const SizedBox(height: 12),
                       ElevatedButton(
                         onPressed: () => Navigator.pushNamed(context, '/vale-presente'),
-                        child: const Text('COMPRAR VALE-PRESENTE'),
+                        child: Text(
+                          'COMPRAR VALE-PRESENTE', 
+                          style: TextStyle(color: AppColors.cream),
+                        ),
                       ),
                     ],
                   ),
@@ -197,7 +200,10 @@ class _GiftCardScreenState extends State<GiftCardScreen> {
                         ),
                       );
                     },
-              child: const Text('COMPRAR VALE-PRESENTE'),
+                    child: Text(
+                      'COMPRAR VALE-PRESENTE',
+                      style: TextStyle(color: AppColors.cream),
+                    ),
             ),
           ],
         ),

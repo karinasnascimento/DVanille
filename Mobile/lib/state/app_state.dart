@@ -27,7 +27,7 @@ class AppState extends ChangeNotifier {
         titulo: 'Nova oferta',
         mensagem: 'Confira o combo da semana.',
         data: DateTime.now(),
-        icone: Icons.card_giftcard,
+        icone: Icons.sell_rounded,
       ),
     ];
   }
@@ -262,7 +262,6 @@ class AppState extends ChangeNotifier {
     trocoPara = null;
   }
 
-
   void advanceOrderStatus(Order order) {
     final flow = order.fluxoStatus;
     final idx = flow.indexOf(order.status);
@@ -271,7 +270,7 @@ class AppState extends ChangeNotifier {
       addNotification(
         titulo: 'Atualização do pedido',
         mensagem: 'Pedido ${order.numeroPedido}: ${order.status.label}.',
-        icone: Icons.outbond,
+        icone: Icons.local_shipping_rounded,
       );
       notifyListeners();
     }
