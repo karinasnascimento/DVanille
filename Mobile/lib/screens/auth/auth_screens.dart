@@ -19,6 +19,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -66,6 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 22),
                 ElevatedButton(
+                  style: isDark ? ElevatedButton.styleFrom(foregroundColor: AppColors.cream) : null,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       final isAdmin = _emailCtrl.text.trim().toLowerCase() == 'admin@dvanille.com';
@@ -123,6 +126,8 @@ class _CadastroScreenState extends State<CadastroScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: const DVanilleHeader(title: 'Criar conta', showBack: true, showMark: false),
       body: SafeArea(
@@ -141,14 +146,20 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   validator: (v) => (v == null || v.isEmpty) ? 'Informe seu nome' : null,
                 ),
                 const SizedBox(height: 14),
-                TextFormField(controller: _telefoneCtrl, keyboardType: TextInputType.phone, inputFormatters: [_telefoneMask],
-                decoration: const InputDecoration(hintText: 'Telefone', prefixIcon: Icon(Icons.phone_rounded),),
-                validator: (v) {
-                  if (v == null || v.isEmpty) {
-                    return 'Informe seu número';}
+                TextFormField(
+                  controller: _telefoneCtrl,
+                  keyboardType: TextInputType.phone,
+                  inputFormatters: [_telefoneMask],
+                  decoration: const InputDecoration(hintText: 'Telefone', prefixIcon: Icon(Icons.phone_rounded)),
+                  validator: (v) {
+                    if (v == null || v.isEmpty) {
+                      return 'Informe seu número';
+                    }
                     if (_telefoneMask.getUnmaskedText().length != 11) {
-                      return 'Informe um telefone válido';}
-                      return null;},
+                      return 'Informe um telefone válido';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 14),
                 TextFormField(
@@ -166,13 +177,14 @@ class _CadastroScreenState extends State<CadastroScreen> {
                 ),
                 const SizedBox(height: 22),
                 ElevatedButton(
+                  style: isDark ? ElevatedButton.styleFrom(foregroundColor: AppColors.cream) : null,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       AppState.instance.updateProfile(
                         nome: _nomeCtrl.text.trim(),
                         email: _emailCtrl.text.trim(),
                         telefone: _telefoneMask.getUnmaskedText(),
-                        );
+                      );
                       AppState.instance.login();
                       Navigator.pushNamedAndRemoveUntil(context, '/main', (r) => false);
                     }
@@ -201,6 +213,8 @@ class _RecuperarScreenState extends State<RecuperarScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: const DVanilleHeader(title: 'Recuperar senha', showBack: true, showMark: false),
       body: SafeArea(
@@ -220,6 +234,7 @@ class _RecuperarScreenState extends State<RecuperarScreen> {
               ),
               const SizedBox(height: 22),
               ElevatedButton(
+                style: isDark ? ElevatedButton.styleFrom(foregroundColor: AppColors.cream) : null,
                 onPressed: () {
                   final ok = _emailCtrl.text.contains('@');
                   Navigator.pushNamed(context, ok ? '/emailok' : '/emailfail');
