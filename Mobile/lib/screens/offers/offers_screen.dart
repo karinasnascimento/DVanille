@@ -28,7 +28,8 @@ class OffersScreen extends StatelessWidget {
               children: [
                 const SectionTitle('Ofertas especiais'),
                 if (ofertas.isEmpty)
-                  const EmptyState(icon: Icons.local_offer_rounded, message: 'No momento não há ofertas disponíveis.')
+                  const EmptyState(icon: Icons.local_offer_rounded, iconColor: AppColors.danger,
+                  message: 'No momento não há ofertas disponíveis.')
                 else
                   GridView.builder(
                     shrinkWrap: true,

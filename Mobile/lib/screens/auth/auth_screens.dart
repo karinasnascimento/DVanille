@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextFormField(
                   controller: _emailCtrl,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(hintText: 'E-mail', prefixIcon: Icon(Icons.mail_rounded)),
+                  decoration: const InputDecoration(hintText: 'E-mail', prefixIcon: Icon(Icons.mail_rounded, color: AppColors.danger)),
                   validator: (v) {
                     if (v == null || v.isEmpty) return 'Informe seu e-mail';
                     if (!v.contains('@')) return 'E-mail inválido';
@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: _obscure,
                   decoration: InputDecoration(
                     hintText: 'Senha',
-                    prefixIcon: const Icon(Icons.lock_rounded),
+                    prefixIcon: const Icon(Icons.lock_rounded, color: AppColors.danger,),
                     suffixIcon: IconButton(
                       icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility, size: 20),
                       onPressed: () => setState(() => _obscure = !_obscure),
@@ -143,7 +143,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                 const SizedBox(height: 24),
                 TextFormField(
                   controller: _nomeCtrl,
-                  decoration: const InputDecoration(hintText: 'Nome completo', prefixIcon: Icon(Icons.person_rounded)),
+                  decoration: const InputDecoration(hintText: 'Nome completo', prefixIcon: Icon(Icons.person_rounded, color: AppColors.danger,)),
                   validator: (v) => (v == null || v.isEmpty) ? 'Informe seu nome' : null,
                 ),
                 const SizedBox(height: 14),
@@ -151,7 +151,7 @@ class _CadastroScreenState extends State<CadastroScreen> {
                   controller: _telefoneCtrl,
                   keyboardType: TextInputType.phone,
                   inputFormatters: [_telefoneMask],
-                  decoration: const InputDecoration(hintText: 'Telefone', prefixIcon: Icon(Icons.phone_rounded)),
+                  decoration: const InputDecoration(hintText: 'Telefone', prefixIcon: Icon(Icons.phone_rounded, color: AppColors.danger,)),
                   validator: (v) {
                     if (v == null || v.isEmpty) {
                       return 'Informe seu número';
@@ -166,14 +166,14 @@ class _CadastroScreenState extends State<CadastroScreen> {
                 TextFormField(
                   controller: _emailCtrl,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(hintText: 'E-mail', prefixIcon: Icon(Icons.mail_rounded)),
+                  decoration: const InputDecoration(hintText: 'E-mail', prefixIcon: Icon(Icons.mail_rounded, color: AppColors.danger,)),
                   validator: (v) => (v == null || !v.contains('@')) ? 'E-mail inválido' : null,
                 ),
                 const SizedBox(height: 14),
                 TextFormField(
                   controller: _senhaCtrl,
                   obscureText: true,
-                  decoration: const InputDecoration(hintText: 'Senha', prefixIcon: Icon(Icons.lock_rounded)),
+                  decoration: const InputDecoration(hintText: 'Senha', prefixIcon: Icon(Icons.lock_rounded, color: AppColors.danger,)),
                   validator: (v) => (v == null || v.length < 4) ? 'Mínimo de 4 caracteres' : null,
                 ),
                 const SizedBox(height: 22),
@@ -231,7 +231,7 @@ class _RecuperarScreenState extends State<RecuperarScreen> {
               TextField(
                 controller: _emailCtrl,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(hintText: 'E-mail', prefixIcon: Icon(Icons.mail_rounded)),
+                decoration: const InputDecoration(hintText: 'E-mail', prefixIcon: Icon(Icons.mail_rounded, color: AppColors.danger,)),
               ),
               const SizedBox(height: 22),
               ElevatedButton(

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../state/app_state.dart';
@@ -27,10 +26,7 @@ class _RestrictionsScreenState extends State<RestrictionsScreen> {
     final primaryText = isDark ? AppColors.darkText : AppColors.brownStrong;
 
     return Scaffold(
-      appBar: const DVanilleHeader(
-        title: 'Minhas restrições',
-        showBack: true,
-      ),
+      appBar: const DVanilleHeader(title: 'Minhas restrições', showBack: true),
       body: Column(
         children: [
           Padding(
@@ -39,10 +35,7 @@ class _RestrictionsScreenState extends State<RestrictionsScreen> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Selecione suas condições:',
-                style: TextStyle(
-                  color: primaryText,
-                  fontSize: 14,
-                ),
+                style: TextStyle(color: primaryText, fontSize: 14),
               ),
             ),
           ),
@@ -55,10 +48,7 @@ class _RestrictionsScreenState extends State<RestrictionsScreen> {
                       value: selected.contains(r),
                       title: Text(
                         r.label,
-                        style: TextStyle(
-                          fontSize: 13.5,
-                          color: primaryText,
-                        ),
+                        style: TextStyle(fontSize: 13.5, color: primaryText),
                       ),
                       activeColor: AppColors.brown,
                       controlAffinity: ListTileControlAffinity.leading,
@@ -96,9 +86,7 @@ class _RestrictionsScreenState extends State<RestrictionsScreen> {
                     AppState.instance.updateUserRestrictions(selected);
                     Navigator.pushNamed(context, '/cardapio');
                   },
-                  child: const Text(
-                    'FILTRAR CARDÁPIO PELAS MINHAS RESTRIÇÕES',
-                  ),
+                  child: const Text('FILTRAR CARDÁPIO PELAS MINHAS RESTRIÇÕES'),
                 ),
               ],
             ),
@@ -113,8 +101,7 @@ class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
 
   @override
-  State<NotificationsScreen> createState() =>
-      _NotificationsScreenState();
+  State<NotificationsScreen> createState() => _NotificationsScreenState();
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
@@ -131,10 +118,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     final state = AppState.instance;
 
     return Scaffold(
-      appBar: const DVanilleHeader(
-        title: 'Notificações',
-        showBack: true,
-      ),
+      appBar: const DVanilleHeader(title: 'Notificações', showBack: true),
       body: ListenableBuilder(
         listenable: state,
         builder: (context, _) {
@@ -161,10 +145,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 ),
                 title: Text(
                   n.titulo,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 subtitle: Text(
                   n.mensagem,
@@ -185,10 +168,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const DVanilleHeader(
-        title: 'Configurações',
-        showBack: true,
-      ),
+      appBar: const DVanilleHeader(title: 'Configurações', showBack: true),
       body: ListView(
         padding: const EdgeInsets.all(18),
         children: [
@@ -197,23 +177,25 @@ class SettingsScreen extends StatelessWidget {
             child: Text(
               'ACESSIBILIDADE',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? AppColors.darkHighlight
-                        : AppColors.brownStrong,
-                    letterSpacing: 0.6,
-                  ),
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? AppColors.darkHighlight
+                    : AppColors.brownStrong,
+                letterSpacing: 0.6,
+              ),
             ),
           ),
           ListenableBuilder(
             listenable: AppState.instance,
             builder: (context, _) {
-              final isDark =
-                  Theme.of(context).brightness == Brightness.dark;
+              final isDark = Theme.of(context).brightness == Brightness.dark;
+              final darkMode = AppState.instance.isDarkMode;
 
               return SwitchListTile(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                 secondary: Icon(
-                  Icons.dark_mode_outlined,
+                  darkMode
+                      ? Icons.dark_mode_outlined
+                      : Icons.light_mode_outlined,
                   color: isDark
                       ? AppColors.darkTextSecondary
                       : AppColors.brownStrong,
@@ -221,9 +203,7 @@ class SettingsScreen extends StatelessWidget {
                 title: Text(
                   'Modo escuro',
                   style: TextStyle(
-                    color: isDark
-                        ? AppColors.darkText
-                        : AppColors.brownStrong,
+                    color: isDark ? AppColors.darkText : AppColors.brownStrong,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -235,7 +215,7 @@ class SettingsScreen extends StatelessWidget {
                         : AppColors.brown,
                   ),
                 ),
-                value: AppState.instance.isDarkMode,
+                value: darkMode,
                 onChanged: AppState.instance.setDarkMode,
               );
             },
@@ -243,19 +223,19 @@ class SettingsScreen extends StatelessWidget {
           const Divider(height: 28),
           _tile(
             context,
-            Icons.notifications_none,
+            Icons.notifications_rounded,
             'Notificações',
             () => Navigator.pushNamed(context, '/notificacoes'),
           ),
           _tile(
             context,
-            Icons.restaurant_menu_outlined,
+            Icons.restaurant_menu_rounded,
             'Preferências alimentares',
             () => Navigator.pushNamed(context, '/restricoes'),
           ),
           _tile(
             context,
-            Icons.location_on_outlined,
+            Icons.location_on_rounded,
             'Endereços',
             () => Navigator.pushNamed(context, '/enderecos'),
           ),
@@ -305,9 +285,7 @@ class SettingsScreen extends StatelessWidget {
       trailing: showTrailing
           ? Icon(
               Icons.chevron_right,
-              color: isDark
-                  ? AppColors.darkTextSecondary
-                  : AppColors.brown,
+              color: isDark ? AppColors.darkTextSecondary : AppColors.brown,
             )
           : null,
       onTap: onTap,

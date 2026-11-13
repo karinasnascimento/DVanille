@@ -69,7 +69,7 @@ class AdminDashboardScreen extends StatelessWidget {
                       _DashboardStatCard(
                         value: '${state.orders.length}',
                         label: 'Pedidos realizados',
-                        icon: Icons.receipt_long_rounded,
+                        icon: Icons.local_mall,
                         accent: AppColors.beige,
                       ),
                       const _DashboardStatCard(
@@ -558,11 +558,11 @@ class AdminProductsScreen extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.edit_outlined, size: 20, color: AppColors.brown),
+                      icon: const Icon(Icons.edit_rounded, size: 20, color: AppColors.brown),
                       onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => AdminProductFormScreen(product: p))),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.delete_outline, size: 20, color: AppColors.danger),
+                      icon: const Icon(Icons.delete_rounded, size: 20, color: AppColors.danger),
                       onPressed: () => state.removeProduct(p.id),
                     ),
                   ],
@@ -801,7 +801,7 @@ class AdminOrdersScreen extends StatelessWidget {
         listenable: state,
         builder: (context, _) {
           if (state.orders.isEmpty) {
-            return const EmptyState(icon: Icons.assignment_outlined, message: 'Nenhum pedido registrado ainda.');
+            return const EmptyState(icon: Icons.assignment_rounded, message: 'Nenhum pedido registrado ainda.');
           }
           return ListView.separated(
             padding: const EdgeInsets.all(18),

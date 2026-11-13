@@ -40,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 _tile(
                   context,
-                  Icons.receipt_long_rounded,
+                  Icons.local_mall,
                   'Meus Pedidos',
                   '/pedidos',
                 ),

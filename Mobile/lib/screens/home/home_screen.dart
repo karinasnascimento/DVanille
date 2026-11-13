@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(
-              Icons.notifications_none,
+              Icons.notifications_rounded,
               color: isDark ? AppColors.darkHighlight : AppColors.brownStrong,
             ),
             onPressed: () => Navigator.pushNamed(context, '/notificacoes'),
@@ -233,25 +233,25 @@ class _HomeDrawer extends StatelessWidget {
               Divider(color: isDark ? AppColors.darkBorder : AppColors.beige),
               _drawerItem(
                 context,
-                Icons.home_outlined,
+                Icons.home_rounded,
                 'Início',
                 () => Navigator.pop(context),
               ),
-              _drawerItem(context, Icons.local_cafe_outlined, 'Conheça', () {
+              _drawerItem(context, Icons.local_cafe_rounded, 'Conheça', () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/conheca');
               }),
-              _drawerItem(context, Icons.mail_outline, 'Contato', () {
+              _drawerItem(context, Icons.mail_rounded, 'Contato', () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/contato');
               }),
-              _drawerItem(context, Icons.favorite_border, 'Favoritos', () {
+              _drawerItem(context, Icons.favorite_rounded, 'Favoritos', () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, '/favoritos');
               }),
               _drawerItem(
                 context,
-                Icons.receipt_long_outlined,
+                Icons.local_mall,
                 'Meus pedidos',
                 () {
                   Navigator.pop(context);
@@ -260,7 +260,7 @@ class _HomeDrawer extends StatelessWidget {
               ),
               _drawerItem(
                 context,
-                Icons.card_giftcard_outlined,
+                Icons.card_giftcard,
                 'Vale-presente',
                 () {
                   Navigator.pop(context);
@@ -269,7 +269,7 @@ class _HomeDrawer extends StatelessWidget {
               ),
               _drawerItem(
                 context,
-                Icons.settings_outlined,
+                Icons.settings_rounded,
                 'Configurações',
                 () {
                   Navigator.pop(context);
@@ -279,7 +279,7 @@ class _HomeDrawer extends StatelessWidget {
               if (state.isAdmin)
                 _drawerItem(
                   context,
-                  Icons.admin_panel_settings_outlined,
+                  Icons.admin_panel_settings_rounded,
                   'Área administrativa',
                   () {
                     Navigator.pop(context);

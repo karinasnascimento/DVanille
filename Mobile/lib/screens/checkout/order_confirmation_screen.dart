@@ -72,7 +72,7 @@ class _OrderConfirmationScreenState extends State<OrderConfirmationScreen> {
                                 child: Icon(
                                   Icons.check_rounded,
                                   size: 43,
-                                  color: accent,
+                                  color: AppColors.success,
                                 ),
                               ),
                               const SizedBox(height: 18),
