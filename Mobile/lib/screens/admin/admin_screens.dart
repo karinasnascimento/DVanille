@@ -8,100 +8,512 @@ import '../../widgets/product_widgets.dart';
 class AdminDashboardScreen extends StatelessWidget {
   const AdminDashboardScreen({super.key});
 
+  static const int _reservasDemonstracao = 1;
+  static const int _usuariosDemonstracao = 1;
+
   @override
   Widget build(BuildContext context) {
     final state = AppState.instance;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "D'Vanille Admin",
+        title: Text(
+          'Dashboard',
           style: TextStyle(
             fontFamily: 'CreamCake',
-            fontSize: 40,
+            fontSize: 36,
             color: AppColors.danger,
-          )
+          ),
         ),
-        leading: IconButton(
-          icon: const Icon(Icons.logout, color: AppColors.brownStrong),
-          tooltip: 'Sair do modo admin',
-          onPressed: () {
-            state.logout();
-            Navigator.pushNamedAndRemoveUntil(context, '/login', (r) => false);
-          },
+        leading: Builder(
+          builder: (drawerContext) => IconButton(
+            icon: Icon(
+              Icons.menu,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? AppColors.darkText
+                  : AppColors.brownStrong,
+            ),
+            tooltip: 'Abrir menu',
+            onPressed: () => Scaffold.of(drawerContext).openDrawer(),
+          ),
         ),
       ),
+      drawer: const _AdminDrawer(),
       body: ListenableBuilder(
         listenable: state,
         builder: (context, _) {
-          return ListView(
-            padding: const EdgeInsets.all(18),
-            children: [
-              const SectionTitle('Resumo'),
-              GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                mainAxisSpacing: 12,
-                crossAxisSpacing: 12,
-                childAspectRatio: 1.6,
+          final pedidosRecentes = state.orders.take(3).toList();
+
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final isWide = constraints.maxWidth >= 650;
+              final crossAxisCount = isWide ? 4 : 2;
+
+              return ListView(
+                padding: const EdgeInsets.fromLTRB(18, 12, 18, 28),
                 children: [
-                  _stat('Produtos', '${state.products.length}', Icons.local_cafe_outlined),
-                  _stat('Pedidos', '${state.orders.length}', Icons.receipt_long_outlined),
-                  _stat('Ofertas', '${state.products.where((p) => p.emOferta).length}', Icons.local_offer_outlined),
-                  _stat('Clientes', '48', Icons.people_outline),
+                  GridView.count(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: crossAxisCount,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    childAspectRatio: isWide ? 1.55 : 1.45,
+                    children: [
+                      _DashboardStatCard(
+                        value: '${state.products.length}',
+                        label: 'Produtos cadastrados',
+                        icon: Icons.inventory_2_rounded,
+                        accent: AppColors.pink,
+                      ),
+                      _DashboardStatCard(
+                        value: '${state.orders.length}',
+                        label: 'Pedidos realizados',
+                        icon: Icons.receipt_long_rounded,
+                        accent: AppColors.beige,
+                      ),
+                      const _DashboardStatCard(
+                        value: '$_reservasDemonstracao',
+                        label: 'Reservas',
+                        icon: Icons.calendar_month_rounded,
+                        accent: AppColors.pink,
+                      ),
+                      const _DashboardStatCard(
+                        value: '$_usuariosDemonstracao',
+                        label: 'Usuários',
+                        icon: Icons.people_rounded,
+                        accent: AppColors.beige,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 22),
+                  if (isWide)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: _RecentOrdersCard(orders: pedidosRecentes),
+                        ),
+                        const SizedBox(width: 14),
+                        const Expanded(child: _RecentReservationsCard()),
+                      ],
+                    )
+                  else ...[
+                    _RecentOrdersCard(orders: pedidosRecentes),
+                    const SizedBox(height: 14),
+                    const _RecentReservationsCard(),
+                  ],
+                  const SizedBox(height: 12),
+                  const Center(
+                    child: Text(
+                      'Painel administrativo • Somente visualização',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.danger,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ),
                 ],
-              ),
-              const SectionTitle('Gerenciar'),
-              DVanilleCard(
-                onTap: () => Navigator.pushNamed(context, '/admin-produtos'),
-                child: const ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.inventory_2_outlined, color: AppColors.brownStrong),
-                  title: Text('Produtos', style: TextStyle(color: AppColors.brownStrong, fontWeight: FontWeight.w600)),
-                  trailing: Icon(Icons.chevron_right, color: AppColors.textMuted),
-                ),
-              ),
-              const SizedBox(height: 10),
-              DVanilleCard(
-                onTap: () => Navigator.pushNamed(context, '/admin-pedidos'),
-                child: const ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  leading: Icon(Icons.assignment_outlined, color: AppColors.brownStrong),
-                  title: Text('Pedidos', style: TextStyle(color: AppColors.brownStrong, fontWeight: FontWeight.w600)),
-                  trailing: Icon(Icons.chevron_right, color: AppColors.textMuted),
-                ),
-              ),
-              const SectionTitle('Pedidos recentes'),
-              if (state.orders.isEmpty)
-                const Text('Nenhum pedido registrado ainda.', style: TextStyle(color: AppColors.textMuted))
-              else
-                ...state.orders.take(5).map((o) => ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: const Icon(Icons.circle, size: 10, color: AppColors.brown),
-                      title: Text('${o.numeroPedido} — ${o.status.label}'),
-                      trailing: Text('R\$ ${o.total.toStringAsFixed(2)}'),
-                    )),
-            ],
+              );
+            },
           );
         },
       ),
     );
   }
+}
 
-  Widget _stat(String label, String value, IconData icon) {
+class _AdminDrawer extends StatelessWidget {
+  const _AdminDrawer();
+
+  @override
+  Widget build(BuildContext context) {
+    final state = AppState.instance;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Drawer(
+      backgroundColor: isDark ? AppColors.darkSecondary : AppColors.cream,
+      child: SafeArea(
+        child: ListenableBuilder(
+          listenable: state,
+          builder: (context, _) {
+            final darkMode = state.isDarkMode;
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(22, 28, 22, 22),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.admin_panel_settings_rounded,
+                        size: 34,
+                        color: isDark ? AppColors.darkHighlight : AppColors.brown,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        "D'Vanille Admin",
+                        style: TextStyle(
+                          fontFamily: 'CreamCake',
+                          fontSize: 29,
+                          color: isDark ? AppColors.darkText : AppColors.brownStrong,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Configurações',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Divider(
+                  height: 1,
+                  color: isDark ? AppColors.darkBorder : AppColors.beige,
+                ),
+                SwitchListTile(
+                  secondary: Icon(
+                    darkMode ? Icons.dark_mode_outlined : Icons.light_mode_outlined,
+                    color: isDark ? AppColors.darkHighlight : AppColors.brown,
+                  ),
+                  title: Text(
+                    'Modo noturno',
+                    style: TextStyle(
+                      color: isDark ? AppColors.darkText : AppColors.brownStrong,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  subtitle: Text(
+                    darkMode ? 'Ativado' : 'Desativado',
+                    style: TextStyle(
+                      color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted,
+                      fontSize: 12,
+                    ),
+                  ),
+                  value: darkMode,
+                  activeThumbColor: isDark ? AppColors.darkButton : AppColors.brown,
+                  onChanged: (enabled) => state.setDarkMode(enabled),
+                ),
+                const Spacer(),
+                Divider(
+                  height: 1,
+                  color: isDark ? AppColors.darkBorder : AppColors.beige,
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.logout,
+                    color: isDark ? AppColors.darkHighlight : AppColors.danger,
+                  ),
+                  title: Text(
+                    'Sair',
+                    style: TextStyle(
+                      color: isDark ? AppColors.darkText : AppColors.brownStrong,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    state.logout();
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      '/login',
+                      (route) => false,
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _DashboardStatCard extends StatelessWidget {
+  final String value;
+  final String label;
+  final IconData icon;
+  final Color accent;
+
+  const _DashboardStatCard({
+    required this.value,
+    required this.label,
+    required this.icon,
+    required this.accent,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: AppColors.beige.withValues(alpha: 0.35),
-        borderRadius: BorderRadius.circular(AppRadius.md),
+        color: isDark ? AppColors.darkSurface : AppColors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.beige.withValues(alpha: 0.65),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.brownStrong.withValues(alpha: 0.045),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.35),
+                borderRadius: BorderRadius.circular(13),
+              ),
+              child: Icon(icon, color: isDark ? AppColors.darkHighlight : AppColors.brown, size: 22),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                value,
+                style: TextStyle(
+                  color: isDark ? AppColors.darkText : AppColors.brownStrong,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: isDark ? AppColors.darkTextSecondary : AppColors.brown,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RecentOrdersCard extends StatelessWidget {
+  final List<Order> orders;
+
+  const _RecentOrdersCard({required this.orders});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return _DashboardSectionCard(
+      title: 'Pedidos recentes',
+      icon: Icons.shopping_bag_rounded,
+      child: orders.isEmpty
+          ? const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                'Nenhum pedido registrado ainda.',
+                style: TextStyle(color: AppColors.textMuted, fontSize: 13),
+              ),
+            )
+          : Column(
+              children: [
+                for (var index = 0; index < orders.length; index++) ...[
+                  if (index > 0)
+                    Divider(
+                      height: 18,
+                      color: isDark
+                          ? AppColors.darkBorder
+                          : AppColors.beige.withValues(alpha: 0.75),
+                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              orders[index].numeroPedido,
+                              style: TextStyle(
+                                color: isDark ? AppColors.darkText : AppColors.brownStrong,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              '${orders[index].data.day.toString().padLeft(2, '0')}/'
+                              '${orders[index].data.month.toString().padLeft(2, '0')}/'
+                              '${orders[index].data.year} • '
+                              '${orders[index].status.label}',
+                              style: TextStyle(
+                                color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'R\$ ${orders[index].total.toStringAsFixed(2).replaceAll('.', ',')}',
+                        style: TextStyle(
+                          color: isDark ? AppColors.darkText : AppColors.brownStrong,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ],
+            ),
+    );
+  }
+}
+
+class _RecentReservationsCard extends StatelessWidget {
+  const _RecentReservationsCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return _DashboardSectionCard(
+      title: 'Reservas recentes',
+      icon: Icons.event_available_rounded,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Reserva demonstrativa',
+                  style: TextStyle(
+                    color: isDark ? AppColors.darkText : AppColors.brownStrong,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  '15/09/2026',
+                  style: TextStyle(
+                    color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 8),
+          _ReservationStatusLabel(),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReservationStatusLabel extends StatelessWidget {
+  const _ReservationStatusLabel();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE5F0E1),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: const Text(
+        'Confirmada',
+        style: TextStyle(
+          color: Color(0xFF477447),
+          fontWeight: FontWeight.w600,
+          fontSize: 11,
+        ),
+      ),
+    );
+  }
+}
+
+class _DashboardSectionCard extends StatelessWidget {
+  final String title;
+  final IconData icon;
+  final Widget child;
+
+  const _DashboardSectionCard({
+    required this.title,
+    required this.icon,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkSurface : AppColors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark ? AppColors.darkBorder : AppColors.beige.withValues(alpha: 0.65),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.brownStrong.withValues(alpha: 0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: AppColors.brown),
-          const Spacer(),
-          Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: AppColors.brownStrong)),
-          Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textMuted)),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(9),
+                decoration: BoxDecoration(
+                  color: AppColors.pink.withValues(alpha: 0.35),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: isDark ? AppColors.darkHighlight : AppColors.brown, size: 20),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: isDark ? AppColors.darkText : AppColors.brownStrong,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Divider(color: AppColors.beige.withValues(alpha: 0.8), height: 1),
+          const SizedBox(height: 12),
+          child,
         ],
       ),
     );

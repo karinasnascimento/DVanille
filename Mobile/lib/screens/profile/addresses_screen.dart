@@ -20,7 +20,8 @@ class AddressesScreen extends StatelessWidget {
         builder: (context, _) {
           if (state.addresses.isEmpty) {
             return EmptyState(
-              icon: Icons.location_on_outlined,
+              icon: Icons.location_on_rounded,
+              iconColor: AppColors.danger,
               message: 'Você ainda não possui endereços cadastrados.',
               buttonLabel: '+ ADICIONAR ENDEREÇO',
               onButtonTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AddressFormScreen())),
@@ -115,8 +116,8 @@ class _AddressFormScreenState extends State<AddressFormScreen> {
     _numeroCtrl = TextEditingController(text: a?.numero ?? '');
     _complementoCtrl = TextEditingController(text: a?.complemento ?? '');
     _bairroCtrl = TextEditingController(text: a?.bairro ?? '');
-    _cidadeCtrl = TextEditingController(text: a?.cidade ?? 'São Paulo');
-    _estadoCtrl = TextEditingController(text: a?.estado ?? 'SP');
+    _cidadeCtrl = TextEditingController(text: a?.cidade ?? '');
+    _estadoCtrl = TextEditingController(text: a?.estado ?? '');
   }
 
   @override

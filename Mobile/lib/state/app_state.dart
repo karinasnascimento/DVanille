@@ -8,19 +8,7 @@ import '../models/models.dart';
 class AppState extends ChangeNotifier {
   AppState._internal() {
     products = MockData.buildProducts();
-    addresses = [
-      Address(
-        id: 'a1',
-        apelido: 'Casa',
-        cep: '01310-100',
-        rua: 'Rua Exemplo',
-        numero: '123',
-        bairro: 'Centro',
-        cidade: 'São Paulo',
-        estado: 'SP',
-        principal: true,
-      ),
-    ];
+    addresses = [];
     notifications = [
       AppNotification(
         id: 'n1',
@@ -48,22 +36,36 @@ class AppState extends ChangeNotifier {
   bool isLoggedIn = false;
   bool isAdmin = false;
   AppUser user = AppUser(
-    nome: 'Viviane Souza',
-    email: 'viviane@email.com',
-    telefone: '(11) 99999-0000',
+    nome: '',
+    email: '',
+    telefone: '',
   );
 
   String _senhaDemonstracao = '1234';
 
-  void login({bool admin = false}) {
+  void login({bool admin = false, String email = ''}) {
     isLoggedIn = true;
     isAdmin = admin;
+    // No protótipo, o e-mail informado no login identifica a sessão atual.
+    // A conta administrativa não utiliza os dados do perfil de cliente.
+    if (!admin && email.trim().isNotEmpty) {
+      user.email = email.trim();
+    }
     notifyListeners();
   }
 
   void logout() {
     isLoggedIn = false;
     isAdmin = false;
+
+    // Evita que dados de uma sessão de demonstração apareçam para o próximo usuário.
+    user.nome = '';
+    user.email = '';
+    user.telefone = '';
+    user.restricoes.clear();
+    addresses.clear();
+    enderecoSelecionado = null;
+    resetCheckout();
     notifyListeners();
   }
 

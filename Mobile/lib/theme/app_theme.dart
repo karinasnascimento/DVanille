@@ -112,13 +112,19 @@ class AppTheme {
         ),
       ),
       textButtonTheme: TextButtonThemeData(
-        style: TextButton.styleFrom(foregroundColor: AppColors.brownStrong),
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.brownStrong,
+          textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.white,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.md),
@@ -144,7 +150,10 @@ class AppTheme {
           borderRadius: BorderRadius.circular(AppRadius.lg),
         ),
       ),
-      dividerTheme: const DividerThemeData(color: AppColors.beige, thickness: 1),
+      dividerTheme: const DividerThemeData(
+        color: AppColors.beige,
+        thickness: 1,
+      ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.brownStrong,
         contentTextStyle: const TextStyle(color: AppColors.white),
@@ -178,12 +187,33 @@ class AppTheme {
 
     return base.copyWith(
       textTheme: base.textTheme.copyWith(
-        headlineSmall: const TextStyle(fontFamily: 'serif', fontWeight: FontWeight.w600, color: AppColors.darkHighlight, fontSize: 22),
-        titleLarge: const TextStyle(fontFamily: 'serif', fontWeight: FontWeight.w600, color: AppColors.darkText, fontSize: 18),
-        titleMedium: const TextStyle(fontFamily: 'serif', fontWeight: FontWeight.w600, color: AppColors.darkText, fontSize: 16),
+        headlineSmall: const TextStyle(
+          fontFamily: 'serif',
+          fontWeight: FontWeight.w600,
+          color: AppColors.darkHighlight,
+          fontSize: 22,
+        ),
+        titleLarge: const TextStyle(
+          fontFamily: 'serif',
+          fontWeight: FontWeight.w600,
+          color: AppColors.darkText,
+          fontSize: 18,
+        ),
+        titleMedium: const TextStyle(
+          fontFamily: 'serif',
+          fontWeight: FontWeight.w600,
+          color: AppColors.darkText,
+          fontSize: 16,
+        ),
         bodyLarge: const TextStyle(color: AppColors.darkText, fontSize: 15),
-        bodyMedium: const TextStyle(color: AppColors.darkTextSecondary, fontSize: 14),
-        bodySmall: const TextStyle(color: AppColors.darkTextSecondary, fontSize: 12),
+        bodyMedium: const TextStyle(
+          color: AppColors.darkTextSecondary,
+          fontSize: 14,
+        ),
+        bodySmall: const TextStyle(
+          color: AppColors.darkTextSecondary,
+          fontSize: 12,
+        ),
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: AppColors.darkBackground,
@@ -191,15 +221,26 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
         foregroundColor: AppColors.darkText,
         centerTitle: true,
-        titleTextStyle: TextStyle(fontFamily: 'serif', fontWeight: FontWeight.w600, color: AppColors.darkText, fontSize: 19),
+        titleTextStyle: TextStyle(
+          fontFamily: 'serif',
+          fontWeight: FontWeight.w600,
+          color: AppColors.darkText,
+          fontSize: 19,
+        ),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.darkButton,
-          foregroundColor: AppColors.darkBackground,
+          foregroundColor: AppColors.cream,
           minimumSize: const Size.fromHeight(52),
-          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, letterSpacing: 0.4),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+          textStyle: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.4,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.pill),
+          ),
           elevation: 0,
         ),
       ),
@@ -208,32 +249,85 @@ class AppTheme {
           foregroundColor: AppColors.darkText,
           minimumSize: const Size.fromHeight(52),
           side: const BorderSide(color: AppColors.darkBorder, width: 1.3),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.pill),
+          ),
         ),
       ),
-      textButtonTheme: TextButtonThemeData(style: TextButton.styleFrom(foregroundColor: AppColors.darkHighlight)),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(foregroundColor: AppColors.darkHighlight),
+      ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.darkSecondary,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        hintStyle: const TextStyle(color: AppColors.darkTextSecondary, fontSize: 14),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: const BorderSide(color: AppColors.darkBorder)),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: const BorderSide(color: AppColors.darkBorder)),
-        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: const BorderSide(color: AppColors.darkButton, width: 1.6)),
-        errorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.md), borderSide: const BorderSide(color: AppColors.danger)),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
+        hintStyle: const TextStyle(
+          color: AppColors.darkTextSecondary,
+          fontSize: 14,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: const BorderSide(color: AppColors.darkBorder),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: const BorderSide(color: AppColors.darkBorder),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: const BorderSide(color: AppColors.darkButton, width: 1.6),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          borderSide: const BorderSide(color: AppColors.danger),
+        ),
       ),
-      cardTheme: CardThemeData(color: AppColors.darkSurface, elevation: 0, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg))),
-      dividerTheme: const DividerThemeData(color: AppColors.darkBorder, thickness: 1),
+      cardTheme: CardThemeData(
+        color: AppColors.darkSurface,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.lg),
+        ),
+      ),
+      dividerTheme: const DividerThemeData(
+        color: AppColors.darkBorder,
+        thickness: 1,
+      ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.darkSurface,
         contentTextStyle: const TextStyle(color: AppColors.darkText),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+        ),
       ),
-      listTileTheme: const ListTileThemeData(iconColor: AppColors.darkTextSecondary, textColor: AppColors.darkText),
-      checkboxTheme: CheckboxThemeData(fillColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.selected) ? AppColors.darkButton : null), checkColor: WidgetStateProperty.all(AppColors.darkBackground)),
-      switchTheme: SwitchThemeData(thumbColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.selected) ? AppColors.darkButton : AppColors.darkTextSecondary), trackColor: WidgetStateProperty.resolveWith((states) => states.contains(WidgetState.selected) ? AppColors.darkSecondary : AppColors.darkBorder)),
+      listTileTheme: const ListTileThemeData(
+        iconColor: AppColors.darkTextSecondary,
+        textColor: AppColors.darkText,
+      ),
+      checkboxTheme: CheckboxThemeData(
+        fillColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? AppColors.darkButton
+              : null,
+        ),
+        checkColor: WidgetStateProperty.all(AppColors.darkBackground),
+      ),
+      switchTheme: SwitchThemeData(
+        thumbColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? AppColors.darkButton
+              : AppColors.darkTextSecondary,
+        ),
+        trackColor: WidgetStateProperty.resolveWith(
+          (states) => states.contains(WidgetState.selected)
+              ? AppColors.darkSecondary
+              : AppColors.darkBorder,
+        ),
+      ),
     );
   }
-
 }

@@ -23,13 +23,14 @@ class ProfileScreen extends StatelessWidget {
                 const DVanilleMark(size: 200),
                 const SizedBox(height: 3),
                 Text(
-                  state.user.nome,
+                  state.user.nome.trim().isEmpty ? 'Minha conta' : state.user.nome,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
-                Text(
-                  state.user.email,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
+                if (state.user.email.trim().isNotEmpty)
+                  Text(
+                    state.user.email,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 const SizedBox(height: 16),
                 OutlinedButton(
                   onPressed: () =>
@@ -39,43 +40,43 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 _tile(
                   context,
-                  Icons.receipt_long_outlined,
+                  Icons.receipt_long_rounded,
                   'Meus Pedidos',
                   '/pedidos',
                 ),
                 _tile(
                   context,
-                  Icons.favorite_border,
+                  Icons.favorite_rounded,
                   'Meus Favoritos',
                   '/favoritos',
                 ),
                 _tile(
                   context,
-                  Icons.location_on_outlined,
+                  Icons.location_on_rounded,
                   'Meus Endereços',
                   '/enderecos',
                 ),
                 _tile(
                   context,
-                  Icons.restaurant_menu_outlined,
+                  Icons.restaurant_menu_rounded,
                   'Restrições Alimentares',
                   '/restricoes',
                 ),
                 _tile(
                   context,
-                  Icons.local_cafe_outlined,
+                  Icons.local_cafe_rounded,
                   'Conheça a D’Vanille',
                   '/conheca',
                 ),
                 _tile(
                   context,
-                  Icons.notifications_none,
+                  Icons.notifications_rounded,
                   'Notificações',
                   '/notificacoes',
                 ),
                 _tile(
                   context,
-                  Icons.settings_outlined,
+                  Icons.settings_rounded,
                   'Configurações',
                   '/configuracoes',
                 ),

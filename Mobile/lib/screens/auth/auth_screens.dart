@@ -13,7 +13,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailCtrl = TextEditingController(text: 'viviane@email.com');
+  final _emailCtrl = TextEditingController();
   final _senhaCtrl = TextEditingController();
   bool _obscure = true;
 
@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextFormField(
                   controller: _emailCtrl,
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(hintText: 'E-mail', prefixIcon: Icon(Icons.mail_outline)),
+                  decoration: const InputDecoration(hintText: 'E-mail', prefixIcon: Icon(Icons.mail_rounded)),
                   validator: (v) {
                     if (v == null || v.isEmpty) return 'Informe seu e-mail';
                     if (!v.contains('@')) return 'E-mail inválido';
@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: _obscure,
                   decoration: InputDecoration(
                     hintText: 'Senha',
-                    prefixIcon: const Icon(Icons.lock_outline),
+                    prefixIcon: const Icon(Icons.lock_rounded),
                     suffixIcon: IconButton(
                       icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility, size: 20),
                       onPressed: () => setState(() => _obscure = !_obscure),
@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       final isAdmin = _emailCtrl.text.trim().toLowerCase() == 'admin@dvanille.com';
-                      AppState.instance.login(admin: isAdmin);
+                      AppState.instance.login(admin: isAdmin, email: isAdmin ? '' : _emailCtrl.text.trim());
                       Navigator.pushNamedAndRemoveUntil(
                         context,
                         isAdmin ? '/admin' : '/main',
@@ -82,20 +82,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: const Text('ENTRAR'),
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 20),
                 TextButton(
                   onPressed: () => Navigator.pushNamed(context, '/recuperar'),
-                  child: const Text('Esqueci minha senha'),
+                  child: const Text('Esqueci minha senha', 
+                  style: TextStyle(fontSize: 17),
+                  ),
                 ),
+                const SizedBox(height: 7),
                 TextButton(
                   onPressed: () => Navigator.pushNamed(context, '/cadastro'),
-                  child: const Text('Criar uma conta'),
+                  child: const Text('Criar uma conta',
+                  style: TextStyle(fontSize: 17),
+                  ),
                 ),
-                const SizedBox(height: 10),
-                Text('Dica: use admin@dvanille.com para acessar a área administrativa.',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodySmall),
-                const SizedBox(height: 20),
+                const SizedBox(height: 14),
                 const BowDecoration(),
               ],
             ),
@@ -230,7 +231,7 @@ class _RecuperarScreenState extends State<RecuperarScreen> {
               TextField(
                 controller: _emailCtrl,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(hintText: 'E-mail', prefixIcon: Icon(Icons.mail_outline)),
+                decoration: const InputDecoration(hintText: 'E-mail', prefixIcon: Icon(Icons.mail_rounded)),
               ),
               const SizedBox(height: 22),
               ElevatedButton(
@@ -261,9 +262,7 @@ class EmailOkScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const BowDecoration(size: 56),
-                const SizedBox(height: 20),
-                const Icon(Icons.mark_email_read_outlined, size: 48, color: AppColors.success),
+                const Icon(Icons.mark_email_read_rounded, size: 48, color: AppColors.success),
                 const SizedBox(height: 16),
                 Text('E-mail enviado!', style: Theme.of(context).textTheme.headlineSmall),
                 const SizedBox(height: 8),
@@ -295,7 +294,7 @@ class EmailFailScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.error_outline, size: 48, color: AppColors.danger),
+                const Icon(Icons.error_rounded, size: 48, color: AppColors.danger),
                 const SizedBox(height: 16),
                 Text('Não foi possível enviar', style: Theme.of(context).textTheme.headlineSmall),
                 const SizedBox(height: 8),
