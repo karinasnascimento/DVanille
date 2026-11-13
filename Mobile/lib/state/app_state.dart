@@ -2,28 +2,19 @@ import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 import '../models/models.dart';
 
-/// Estado global simples do protótipo (sem backend real).
-/// Usa ChangeNotifier + ListenableBuilder (nativos do Flutter) — sem
-/// dependências externas de gerenciamento de estado.
+/// Estado global da aplicação.
+/// Usa ChangeNotifier + ListenableBuilder (nativos do Flutter).
 class AppState extends ChangeNotifier {
   AppState._internal() {
-    products = MockData.buildProducts();
+    products = CatalogData.buildProducts();
     addresses = [];
-    notifications = [
-      AppNotification(
-        id: 'n1',
-        titulo: 'Nova oferta',
-        mensagem: 'Confira o combo da semana.',
-        data: DateTime.now(),
-        icone: Icons.sell_rounded,
-      ),
-    ];
+    notifications = [];
   }
 
   static final AppState instance = AppState._internal();
 
   // ------------------------------------------------------------------
-  // Autenticação (simulada)
+  // Autenticação
   // ------------------------------------------------------------------
   bool isDarkMode = false;
 
@@ -41,13 +32,9 @@ class AppState extends ChangeNotifier {
     telefone: '',
   );
 
-  String _senhaDemonstracao = '1234';
-
   void login({bool admin = false, String email = ''}) {
     isLoggedIn = true;
     isAdmin = admin;
-    // No protótipo, o e-mail informado no login identifica a sessão atual.
-    // A conta administrativa não utiliza os dados do perfil de cliente.
     if (!admin && email.trim().isNotEmpty) {
       user.email = email.trim();
     }
@@ -58,7 +45,6 @@ class AppState extends ChangeNotifier {
     isLoggedIn = false;
     isAdmin = false;
 
-    // Evita que dados de uma sessão de demonstração apareçam para o próximo usuário.
     user.nome = '';
     user.email = '';
     user.telefone = '';
@@ -153,7 +139,7 @@ class AppState extends ChangeNotifier {
   }
 
   // ------------------------------------------------------------------
-  // Checkout em andamento (rascunho)
+  // Checkout em andamento
   // ------------------------------------------------------------------
   TipoEntrega tipoEntregaSelecionada = TipoEntrega.delivery;
   Address? enderecoSelecionado;
@@ -220,7 +206,7 @@ class AppState extends ChangeNotifier {
   // ------------------------------------------------------------------
   final List<Order> orders = [];
 
-  int _orderSeq = 123;
+  int _orderSeq = 1;
 
   Order createOrder() {
     if (cartItems.isEmpty) {
@@ -360,20 +346,6 @@ class AppState extends ChangeNotifier {
     user.email = email;
     user.telefone = telefone;
     notifyListeners();
-  }
-
-  bool atualizarSenhaDemonstracao(String novaSenha) {
-    if (novaSenha.length < 4) {
-      return false;
-    }
-
-    _senhaDemonstracao = novaSenha;
-    notifyListeners();
-    return true;
-  }
-
-  bool validarSenhaDemonstracao(String senha) {
-    return senha == _senhaDemonstracao;
   }
 
   void updateUserRestrictions(Set<DietaryRestriction> restrictions) {

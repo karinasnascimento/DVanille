@@ -80,7 +80,6 @@ class ProfileScreen extends StatelessWidget {
                   'Configurações',
                   '/configuracoes',
                 ),
-
                 DVanilleCard(
                   onTap: () {
                     AppState.instance.logout();
@@ -106,7 +105,6 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                
                 if (state.isAdmin)
                   _tile(
                     context,
@@ -188,7 +186,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _nomeCtrl = TextEditingController(text: u.nome);
     _emailCtrl = TextEditingController(text: u.email);
 
-    // Formata o telefone que já está salvo no perfil.
     final telefoneNumeros = u.telefone.replaceAll(RegExp(r'\D'), '');
 
     _telCtrl = TextEditingController(
@@ -201,6 +198,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     _nomeCtrl.dispose();
     _emailCtrl.dispose();
     _telCtrl.dispose();
+    _senhaCtrl.dispose();
+    _confirmarSenhaCtrl.dispose();
     super.dispose();
   }
 
@@ -228,9 +227,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 validator: (v) =>
                     (v == null || v.trim().isEmpty) ? 'Informe seu nome' : null,
               ),
-
               const SizedBox(height: 16),
-
               const Text(
                 'E-mail',
                 style: TextStyle(
@@ -245,9 +242,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 validator: (v) =>
                     (v == null || !v.contains('@')) ? 'E-mail inválido' : null,
               ),
-
               const SizedBox(height: 16),
-
               const Text(
                 'Telefone',
                 style: TextStyle(
@@ -275,9 +270,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   return null;
                 },
               ),
-
               const SizedBox(height: 16),
-
               const Text(
                 'Nova senha',
                 style: TextStyle(
@@ -286,7 +279,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               ),
               const SizedBox(height: 6),
-
               TextFormField(
                 controller: _senhaCtrl,
                 obscureText: !_mostrarSenha,
@@ -317,9 +309,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   return null;
                 },
               ),
-
               const SizedBox(height: 16),
-
               const Text(
                 'Confirmar nova senha',
                 style: TextStyle(
@@ -328,7 +318,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               ),
               const SizedBox(height: 6),
-
               TextFormField(
                 controller: _confirmarSenhaCtrl,
                 obscureText: !_mostrarConfirmacao,
@@ -361,43 +350,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   return null;
                 },
               ),
-
               const SizedBox(height: 26),
-
-              const SizedBox(height: 26),
-
               ElevatedButton(
                 onPressed: () {
                   if (!_formKey.currentState!.validate()) {
                     return;
                   }
 
-                  final email = _emailCtrl.text.trim().toLowerCase();
-                  final senha = _senhaCtrl.text;
-
-                  final isAdmin = email == 'admin@dvanille.com';
-                  final emailUsuario = AppState.instance.user.email
-                      .trim()
-                      .toLowerCase();
-
-                  final emailValido = isAdmin || email == emailUsuario;
-                  final senhaValida = AppState.instance
-                      .validarSenhaDemonstracao(senha);
-
-                  if (!emailValido || !senhaValida) {
-                    showBrandSnackBar(context, 'E-mail ou senha incorretos.');
-                    return;
-                  }
-
-                  AppState.instance.login(admin: isAdmin);
-
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    isAdmin ? '/admin' : '/main',
-                    (r) => false,
+                  AppState.instance.updateProfile(
+                    nome: _nomeCtrl.text.trim(),
+                    email: _emailCtrl.text.trim(),
+                    telefone: _telCtrl.text.replaceAll(RegExp(r'\D'), ''),
                   );
-                },
 
+                  showBrandSnackBar(
+                    context,
+                    'Alterações salvas com sucesso!',
+                  );
+                  Navigator.pop(context);
+                },
                 child: const Text('SALVAR ALTERAÇÕES'),
               ),
             ],

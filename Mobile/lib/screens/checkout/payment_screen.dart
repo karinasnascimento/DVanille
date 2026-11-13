@@ -21,8 +21,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final _validadeCtrl = TextEditingController();
   final _cvvCtrl = TextEditingController();
 
-  bool pixAguardando = true;
-
   @override
   void initState() {
     super.initState();
@@ -280,10 +278,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _cardSection() {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final secondaryText = isDark
-        ? AppColors.darkTextSecondary
-        : AppColors.textMuted;
     return DVanilleCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -337,11 +331,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
               ),
             ],
           ),
-          const SizedBox(height: 6),
-          Text(
-            'Protótipo — nenhum dado real é processado ou armazenado.',
-            style: TextStyle(fontSize: 11, color: secondaryText),
-          ),
         ],
       ),
     );
@@ -350,6 +339,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget _pixSection(double total) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryText = isDark ? AppColors.darkText : AppColors.brownStrong;
+    final secondaryText =
+        isDark ? AppColors.darkTextSecondary : AppColors.textMuted;
     return DVanilleCard(
       child: Column(
         children: [
@@ -361,16 +352,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ),
           const SizedBox(height: 6),
           Text(
-            pixAguardando ? 'Aguardando pagamento' : 'Pagamento confirmado.',
-            style: TextStyle(
-              color: pixAguardando ? AppColors.warning : AppColors.success,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
-          OutlinedButton(
-            onPressed: () => setState(() => pixAguardando = false),
-            child: const Text('SIMULAR PAGAMENTO'),
+            'Escaneie o QR Code acima e clique em Confirmar Pagamento.',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 13, color: secondaryText),
           ),
         ],
       ),
@@ -387,7 +371,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Carteira digital D\'Vanille selecionada. Protótipo — nenhuma transação real é realizada.',
+              'Carteira digital D\'Vanille selecionada.',
               style: TextStyle(fontSize: 13, color: primaryText),
             ),
           ),

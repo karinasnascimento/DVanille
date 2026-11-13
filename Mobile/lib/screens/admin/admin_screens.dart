@@ -8,9 +8,6 @@ import '../../widgets/product_widgets.dart';
 class AdminDashboardScreen extends StatelessWidget {
   const AdminDashboardScreen({super.key});
 
-  static const int _reservasDemonstracao = 1;
-  static const int _usuariosDemonstracao = 1;
-
   @override
   Widget build(BuildContext context) {
     final state = AppState.instance;
@@ -73,13 +70,13 @@ class AdminDashboardScreen extends StatelessWidget {
                         accent: AppColors.beige,
                       ),
                       const _DashboardStatCard(
-                        value: '$_reservasDemonstracao',
+                        value: '0',
                         label: 'Reservas',
                         icon: Icons.calendar_month_rounded,
                         accent: AppColors.pink,
                       ),
                       const _DashboardStatCard(
-                        value: '$_usuariosDemonstracao',
+                        value: '0',
                         label: 'Usuários',
                         icon: Icons.people_rounded,
                         accent: AppColors.beige,
@@ -106,7 +103,7 @@ class AdminDashboardScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   const Center(
                     child: Text(
-                      'Painel administrativo • Somente visualização',
+                      'Painel administrativo',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: AppColors.danger,
@@ -393,61 +390,14 @@ class _RecentReservationsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return _DashboardSectionCard(
+    return const _DashboardSectionCard(
       title: 'Reservas recentes',
       icon: Icons.event_available_rounded,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Reserva demonstrativa',
-                  style: TextStyle(
-                    color: isDark ? AppColors.darkText : AppColors.brownStrong,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 14,
-                  ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  '15/09/2026',
-                  style: TextStyle(
-                    color: isDark ? AppColors.darkTextSecondary : AppColors.textMuted,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(width: 8),
-          _ReservationStatusLabel(),
-        ],
-      ),
-    );
-  }
-}
-
-class _ReservationStatusLabel extends StatelessWidget {
-  const _ReservationStatusLabel();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE5F0E1),
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: const Text(
-        'Confirmada',
-        style: TextStyle(
-          color: Color(0xFF477447),
-          fontWeight: FontWeight.w600,
-          fontSize: 11,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 12),
+        child: Text(
+          'Nenhuma reserva registrada ainda.',
+          style: TextStyle(color: AppColors.textMuted, fontSize: 13),
         ),
       ),
     );

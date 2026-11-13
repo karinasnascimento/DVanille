@@ -1,6 +1,6 @@
 import '../models/models.dart';
 
-class MockData {
+class CatalogData {
   static List<Product> buildProducts() {
     return [
       Product(

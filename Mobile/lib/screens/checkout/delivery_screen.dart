@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../../models/models.dart';
 import '../../state/app_state.dart';
@@ -98,7 +97,7 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                         ],
                       ),
                     )
-                  else
+                  else ...[
                     DVanilleCard(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,13 +127,14 @@ class _DeliveryScreenState extends State<DeliveryScreen> {
                         ],
                       ),
                     ),
-                  const SizedBox(height: 10),
-                  OutlinedButton(
-                    onPressed: () async {
-                      await Navigator.pushNamed(context, '/enderecos');
-                    },
-                    child: const Text('ALTERAR ENDEREÇO'),
-                  ),
+                    const SizedBox(height: 10),
+                    OutlinedButton(
+                      onPressed: () async {
+                        await Navigator.pushNamed(context, '/enderecos');
+                      },
+                      child: const Text('ALTERAR ENDEREÇO'),
+                    ),
+                  ],
                   const SizedBox(height: 20),
                   Text(
                     'Tempo estimado: 25–40 min',

@@ -68,9 +68,9 @@ class _OrderTile extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.w700, color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong)),
               ],
             ),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(_fmtDate(order.data), style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.textMuted, fontSize: 12)),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
             Row(
               children: [
                 Icon(
@@ -78,11 +78,11 @@ class _OrderTile extends StatelessWidget {
                   size: 15,
                   color: ongoing ? AppColors.warning : AppColors.success,
                 ),
-                SizedBox(width: 6),
+                const SizedBox(width: 6),
                 Text(order.status.label, style: TextStyle(fontSize: 13, color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong)),
               ],
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
@@ -123,22 +123,22 @@ class OrderDetailsScreen extends StatelessWidget {
                     ],
                   ),
                 )),
-            Divider(height: 28),
+            const Divider(height: 28),
             _line('Subtotal', order.subtotal),
             _line('Entrega', order.taxaEntrega),
-            Divider(),
+            const Divider(),
             _line('TOTAL', order.total, bold: true),
-            SizedBox(height: 14),
+            const SizedBox(height: 14),
             Text('Pagamento: ${order.metodoPagamento.label}', style: Theme.of(context).textTheme.bodyMedium),
             Text('Entrega: ${order.tipoEntrega == TipoEntrega.delivery ? 'Delivery' : 'Retirada'}',
                 style: Theme.of(context).textTheme.bodyMedium),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text('Status: ${order.status.label}', style: TextStyle(fontWeight: FontWeight.w600, color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkText : AppColors.brownStrong)),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             if (order.status != StatusPedido.entregue && order.status != StatusPedido.retirado)
               ElevatedButton(
                 onPressed: () => Navigator.pushNamed(context, '/rastreamento', arguments: order),
-                child: Text('ACOMPANHAR PEDIDO'),
+                child: const Text('ACOMPANHAR PEDIDO'),
               ),
           ],
         ),
@@ -173,14 +173,13 @@ class OrderTrackingScreen extends StatelessWidget {
         builder: (context, _) {
           final flow = order.fluxoStatus;
           final currentIndex = flow.indexOf(order.status);
-          final finished = currentIndex == flow.length - 1;
           return Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Pedido ${order.numeroPedido}', style: Theme.of(context).textTheme.titleLarge),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ...List.generate(flow.length, (i) {
                   final done = i <= currentIndex;
                   return Row(
@@ -197,7 +196,7 @@ class OrderTrackingScreen extends StatelessWidget {
                             Container(width: 2, height: 34, color: done ? AppColors.success : (Theme.of(context).brightness == Brightness.dark ? AppColors.darkBorder : AppColors.beige)),
                         ],
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Padding(
                         padding: const EdgeInsets.only(top: 1),
                         child: Text(
@@ -211,13 +210,8 @@ class OrderTrackingScreen extends StatelessWidget {
                     ],
                   );
                 }),
-                Divider(height: 32),
+                const Divider(height: 32),
                 Text('Previsão: 25–40 minutos', style: TextStyle(color: Theme.of(context).brightness == Brightness.dark ? AppColors.darkTextSecondary : AppColors.textMuted)),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: finished ? null : () => state.advanceOrderStatus(order),
-                  child: Text('SIMULAR PRÓXIMO STATUS'),
-                ),
               ],
             ),
           );
