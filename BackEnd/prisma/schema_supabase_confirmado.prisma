@@ -130,6 +130,7 @@ model Product {
   proteins              Decimal?             @db.Decimal(7, 2)
   fats                  Decimal?             @db.Decimal(7, 2)
   fiber                 Decimal?             @db.Decimal(7, 2)
+  sugars                Decimal?             @db.Decimal(7, 2)
   sodium                Decimal?             @db.Decimal(9, 2)
   ingredients           String?
   allergens             String?
