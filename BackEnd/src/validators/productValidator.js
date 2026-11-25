@@ -19,6 +19,7 @@ const PRODUCT_FIELDS = [
   'proteins',
   'fats',
   'fiber',
+  'sugars',
   'sodium',
   'ingredients',
   'allergens',
@@ -51,7 +52,7 @@ const BOOLEAN_FIELDS = [
   'isVegan',
 ];
 
-const NUTRITION_DECIMALS = ['carbohydrates', 'proteins', 'fats', 'fiber', 'sodium'];
+const NUTRITION_DECIMALS = ['carbohydrates', 'proteins', 'fats', 'fiber', 'sugars', 'sodium'];
 
 /** required=true na criação (campos obrigatórios), false na edição (tudo opcional). */
 const productFieldRules = (required) => {
